@@ -97,13 +97,11 @@ export const processSteps = [
 ];
 
 export const galleryImages = [
-  { src: '/assets/prvn-machine.webp', alt: 'PRVN epoxy surface preparation machine graphic' },
-  { src: '/assets/gallery-banner.webp', alt: 'High-gloss epoxy floor with reflective finish' },
-  { src: '/assets/gallery-install-1.webp', alt: 'PRVN epoxy visual asset for floor coating inspiration' },
-  { src: '/assets/gallery-install-2.webp', alt: 'PRVN epoxy visual asset showing decorative coating finish' },
-  { src: '/assets/style-flake.webp', alt: 'Flake epoxy color sample' },
-  { src: '/assets/style-quartz.webp', alt: 'Quartz epoxy color sample' },
-  { src: '/assets/style-metallic.webp', alt: 'Metallic epoxy color sample' },
+  { src: '/assets/gallery-project-01.webp', alt: 'PRVN epoxy project gallery image' },
+  { src: '/assets/gallery-project-02.webp', alt: 'Completed PRVN epoxy floor project' },
+  { src: '/assets/gallery-project-03.webp', alt: 'PRVN epoxy floor concept gallery image' },
+  { src: '/assets/gallery-project-04.webp', alt: 'PRVN epoxy floor concept gallery image' },
+  { src: '/assets/gallery-project-05.webp', alt: 'PRVN epoxy floor concept gallery image' },
 ];
 
 export const faqs = [

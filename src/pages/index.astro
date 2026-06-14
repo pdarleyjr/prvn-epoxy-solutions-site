@@ -1,7 +1,7 @@
 ---
 import JsonLd from '~/components/JsonLd.astro';
 import StickyMobileCTA from '~/components/StickyMobileCTA.astro';
-import { business, faqs, finishFamilies, galleryImages, processSteps } from '~/data/site';
+import { business, finishFamilies, galleryImages, processSteps } from '~/data/site';
 import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
@@ -31,23 +31,10 @@ const localBusinessSchema = {
     },
   })),
 };
-
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: faq.answer,
-    },
-  })),
-};
 ---
 
 <Layout metadata={metadata}>
-  <JsonLd data={[localBusinessSchema, faqSchema]} />
+  <JsonLd data={localBusinessSchema} />
 
   <section class="hero">
     <div class="hero-grid shell">
@@ -141,24 +128,26 @@ const faqSchema = {
         <span class="kicker">Before / after</span>
         <h2 id="before-after-title">From bare slab to showroom finish.</h2>
         <p>
-          Drag the slider to compare a placeholder concrete surface with a PRVN finish preview. Real before photos will
-          replace the placeholder once project photography is approved.
+          Drag the slider to compare a real job in progress with the finished PRVN epoxy coating after the floor is
+          complete.
         </p>
       </div>
       <div class="ba-slider" data-before-after style="--split: 52%;">
         <div class="ba-after">
           <img
-            src="/assets/gallery-banner.webp"
-            alt="Finished epoxy floor after coating"
+            src="/assets/after-job.webp"
+            alt="Completed PRVN epoxy floor after coating"
             loading="lazy"
             decoding="async"
           />
         </div>
         <div class="ba-before">
-          <div class="pending-before">
-            <strong>Before photo pending</strong>
-            <span>Placeholder concrete texture until confirmed project photos are supplied.</span>
-          </div>
+          <img
+            src="/assets/before-job.webp"
+            alt="Epoxy floor job in progress before completion"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         <input class="ba-range" type="range" min="8" max="92" value="52" aria-label="Compare before and after floor" />
         <div class="ba-handle" aria-hidden="true">&lt;&gt;</div>
@@ -219,39 +208,11 @@ const faqSchema = {
       <div class="section-heading">
         <span class="kicker">Gallery preview</span>
         <h2 id="gallery-title">Finish ideas with depth, chip, and gloss.</h2>
-        <p>
-          Provided PRVN assets are optimized for fast previews. Additional project photos can drop into the same
-          gallery.
-        </p>
+        <p>Current PRVN project and concept imagery, arranged to preserve each image without cropping.</p>
       </div>
       <div class="gallery-grid">
-        {
-          galleryImages
-            .slice(0, 6)
-            .map((image) => <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />)
-        }
+        {galleryImages.map((image) => <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />)}
       </div>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="reviews-title">
-    <div class="shell review-hold">
-      <div class="section-heading">
-        <span class="kicker">Reviews</span>
-        <h2 id="reviews-title">Client reviews are ready to plug in.</h2>
-        <p>
-          No fake testimonials are published. Once PRVN provides Google reviews or written approvals, this section can
-          switch from placeholder language to verified customer quotes.
-        </p>
-      </div>
-      <article class="card">
-        <h3>Verified review slot</h3>
-        <p>
-          Send approved review text, reviewer first name, project type, and optional city. The site will publish it with
-          attribution instead of placeholder praise.
-        </p>
-        <a class="button button-secondary" href="/quote">Request a quote instead</a>
-      </article>
     </div>
   </section>
 
