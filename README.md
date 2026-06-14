@@ -22,6 +22,14 @@ npm run build
 - Build output: `dist`
 - Production branch: `main`
 - Functions directory: `functions`
+- Pages project: `prvn-epoxy-solutions-site`
+
+The first production deployment was created with Wrangler direct upload. GitHub-driven deploys are prepared in `.github/workflows/actions.yaml`; add these repository secrets to enable automatic deploys on pushes to `main`:
+
+```text
+CLOUDFLARE_API_TOKEN=
+CLOUDFLARE_ACCOUNT_ID=265122b6d6f29457b0ca950c55f3ac6e
+```
 
 ## Environment variables
 
