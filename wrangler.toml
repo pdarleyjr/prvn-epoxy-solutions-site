@@ -1,0 +1,6 @@
+name = "prvn-epoxy-solutions-site"
+compatibility_date = "2026-06-14"
+pages_build_output_dir = "dist"
+
+[vars]
+QUOTE_TO_EMAIL = "PRVNEPOXY@OUTLOOK.COM"

@@ -1,0 +1,102 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import Logo from '~/components/Logo.astro';
+import { headerData, footerData } from '~/navigation';
+import { business } from '~/data/site';
+
+import type { MetaData } from '~/types';
+
+export interface Props {
+  metadata?: MetaData;
+}
+
+const { metadata } = Astro.props;
+---
+
+<Layout metadata={metadata}>
+  <header class="site-header" data-site-header>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="nav-shell">
+      <a class="brand-link" href="/" aria-label="PRVN Epoxy Solutions home">
+        <Logo />
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+        Menu
+      </button>
+
+      <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+        {
+          headerData.links.map((link) => (
+            <a href={link.href} class:list={[Astro.url.pathname === link.href ? 'is-active' : '']}>
+              {link.text}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="nav-actions">
+        <a class="phone-link" href={business.phoneHref}>{business.phoneDisplay}</a>
+        {
+          headerData.actions.map((action) => (
+            <a class="button button-small" href={action.href}>
+              {action.text}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid shell">
+      <div class="footer-brand">
+        <Logo />
+        <p>{business.tagline}</p>
+        <p class="footer-note">{footerData.footNote}</p>
+      </div>
+      {
+        footerData.links.map((group) => (
+          <div class="footer-column">
+            <h2>{group.title}</h2>
+            {group.links.map((link) => (
+              <a href={link.href}>{link.text}</a>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+    <div class="footer-bottom shell">
+      <p>Copyright {new Date().getFullYear()} PRVN Epoxy Solutions. All rights reserved.</p>
+      <div>
+        {footerData.secondaryLinks.map((link) => <a href={link.href}>{link.text}</a>)}
+      </div>
+    </div>
+  </footer>
+</Layout>
+
+<script>
+  const header = document.querySelector('[data-site-header]');
+  const button = document.querySelector('[data-nav-toggle]');
+  const nav = document.querySelector('[data-site-nav]');
+
+  button?.addEventListener('click', () => {
+    const isOpen = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', String(!isOpen));
+    header?.classList.toggle('is-open', !isOpen);
+    nav?.classList.toggle('is-open', !isOpen);
+  });
+
+  nav?.addEventListener('click', () => {
+    button?.setAttribute('aria-expanded', 'false');
+    header?.classList.remove('is-open');
+    nav.classList.remove('is-open');
+  });
+</script>

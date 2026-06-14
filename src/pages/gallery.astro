@@ -1,0 +1,29 @@
+---
+import { galleryImages } from '~/data/site';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Epoxy Floor Gallery',
+  description: 'Preview PRVN Epoxy Solutions flake, quartz, metallic, and decorative epoxy floor finishes.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="page-hero">
+    <div class="shell section-heading">
+      <span class="kicker">Gallery</span>
+      <h1>Finish previews for bold, durable concrete.</h1>
+      <p>
+        These launch assets show the visual direction for PRVN epoxy systems. Real project before-and-after galleries
+        can be added as soon as approved photos are available.
+      </p>
+      <a class="button" href="/quote">Request this look</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell gallery-grid">
+      {galleryImages.map((image) => <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />)}
+    </div>
+  </section>
+</Layout>

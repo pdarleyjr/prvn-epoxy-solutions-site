@@ -1,0 +1,48 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Service Areas',
+  description: 'PRVN Epoxy Solutions service-area details. City-specific pages are pending confirmation before launch.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="page-hero">
+    <div class="shell section-heading">
+      <span class="kicker">Service area</span>
+      <h1>Coverage details are ready for confirmation.</h1>
+      <p>
+        City-specific epoxy floor service pages should not be published until PRVN confirms the exact address, service
+        radius, cities served, and whether to display a physical address or service-area-only business profile.
+      </p>
+      <a class="button" href="/quote">Ask if your project is covered</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell cards-grid">
+      <article class="card">
+        <h2>Pending business details</h2>
+        <p>
+          Exact domain, legal name, address preference, confirmed cities, and Google Business Profile should be supplied
+          before local SEO pages go live.
+        </p>
+      </article>
+      <article class="card">
+        <h2>Safe launch behavior</h2>
+        <p>
+          The website can launch with a general service-area page and quote form without claiming unconfirmed city
+          coverage.
+        </p>
+      </article>
+      <article class="card">
+        <h2>Future city pages</h2>
+        <p>
+          Once confirmed, each city page can include unique project copy, LocalBusiness schema, service schema, and a
+          city-specific quote CTA.
+        </p>
+      </article>
+    </div>
+  </section>
+</Layout>

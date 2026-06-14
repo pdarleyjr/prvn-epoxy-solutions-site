@@ -1,0 +1,76 @@
+---
+import { business, finishFamilies } from '~/data/site';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'About PRVN Epoxy Solutions',
+  description: 'PRVN Epoxy Solutions installs premium residential, commercial, and industrial epoxy coating systems.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="page-hero">
+    <div class="shell split-grid">
+      <div class="section-heading">
+        <span class="kicker">About PRVN</span>
+        <h1>Luxury epoxy floors with contractor-grade discipline.</h1>
+        <p>
+          PRVN Epoxy Solutions focuses on decorative concrete coating systems that make garages, shops, showrooms,
+          counters, and work spaces feel finished, resilient, and easy to maintain.
+        </p>
+        <div class="inline-actions">
+          <a class="button" href="/quote">Get a free estimate</a>
+          <a class="button button-secondary" href={business.emailHref}>Email PRVN</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img
+          src="/assets/gallery-install-1.webp"
+          alt="PRVN epoxy brand and coating visual"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell cards-grid">
+      <article class="card">
+        <h2>What PRVN does</h2>
+        <p>{business.tagline}</p>
+      </article>
+      <article class="card">
+        <h2>How PRVN helps</h2>
+        <p>Free estimates can begin by phone, text, email, or the quote wizard with photos and project details.</p>
+      </article>
+      <article class="card">
+        <h2>What comes next</h2>
+        <p>
+          Warranty, insurance, license, address, social profiles, and Google Business Profile details should be
+          confirmed before production launch.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading">
+        <span class="kicker">Finish families</span>
+        <h2>Flake, quartz, metallic, and custom detail systems.</h2>
+      </div>
+      <div class="styles-grid">
+        {
+          finishFamilies.map((finish) => (
+            <article class="service-card">
+              <img src={finish.image} alt={`${finish.title} finish sample`} loading="lazy" decoding="async" />
+              <h3>{finish.title}</h3>
+              <p>{finish.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,43 @@
+---
+import { business } from '~/data/site';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Contact PRVN Epoxy Solutions',
+  description: 'Call, email, text, or request a free PRVN Epoxy Solutions estimate for epoxy floor coatings.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="page-hero">
+    <div class="shell section-heading">
+      <span class="kicker">Contact</span>
+      <h1>Call, email, text, or send project details.</h1>
+      <p>
+        The fastest quote includes photos, approximate square footage, slab condition, finish preference, and the target
+        project timeline.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell split-grid">
+      <article class="contact-card">
+        <h2>Direct contact</h2>
+        <p>Call, email or text for a free estimate.</p>
+        <div class="inline-actions">
+          <a class="button" href={business.phoneHref}>{business.phoneDisplay}</a>
+          <a class="button button-secondary" href={business.emailHref}>{business.email}</a>
+        </div>
+      </article>
+      <article class="contact-card">
+        <h2>Structured quote</h2>
+        <p>
+          Use the wizard if you want PRVN to receive the project type, finish preference, timeline, and message in one
+          clean request.
+        </p>
+        <a class="button" href="/quote">Open quote wizard</a>
+      </article>
+    </div>
+  </section>
+</Layout>

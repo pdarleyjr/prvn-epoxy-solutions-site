@@ -1,0 +1,45 @@
+---
+import { processSteps } from '~/data/site';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Epoxy Floor Installation Process',
+  description:
+    'See the PRVN Epoxy Solutions process from estimate and concrete prep through coating, topcoat, cure, and handoff.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="page-hero">
+    <div class="shell section-heading">
+      <span class="kicker">Process</span>
+      <h1>Premium epoxy starts before the first coat.</h1>
+      <p>
+        The final gloss depends on the prep. PRVN uses a clear workflow to assess the slab, select the coating system,
+        install cleanly, and communicate cure expectations.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell timeline">
+      {
+        processSteps.map((step) => (
+          <article>
+            <h2>{step.title}</h2>
+            <p>{step.text}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell final-cta">
+      <span class="kicker">Free estimate</span>
+      <h2>Send photos before you schedule.</h2>
+      <p class="lede">Photos help identify cracks, coatings, stains, joints, and prep conditions before pricing.</p>
+      <a class="button" href="/quote">Start quote wizard</a>
+    </div>
+  </section>
+</Layout>

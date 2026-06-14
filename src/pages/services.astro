@@ -1,0 +1,109 @@
+---
+import { getCollection } from 'astro:content';
+import JsonLd from '~/components/JsonLd.astro';
+import { business, services } from '~/data/site';
+import Layout from '~/layouts/PageLayout.astro';
+
+const serviceEntries = (await getCollection('services')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+const entrySlug = (id: string) => id.replace(/\.(md|mdx)$/i, '');
+
+const metadata = {
+  title: 'Epoxy Floor Services',
+  description:
+    'Explore PRVN Epoxy Solutions services including flake epoxy, quartz epoxy, metallic epoxy, solid colors, countertops, logos, and custom finishes.',
+};
+
+const serviceSchema = serviceEntries.map((entry) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: entry.data.title,
+  description: entry.data.description,
+  provider: {
+    '@type': 'HomeAndConstructionBusiness',
+    name: business.name,
+    telephone: business.phoneDisplay,
+    email: business.email,
+  },
+  serviceType: entry.data.finishType,
+  areaServed: 'Service area pending confirmation',
+}));
+---
+
+<Layout metadata={metadata}>
+  <JsonLd data={serviceSchema} />
+
+  <section class="page-hero">
+    <div class="shell section-heading">
+      <span class="kicker">Services</span>
+      <h1>Coating systems for the way your concrete gets used.</h1>
+      <p>
+        PRVN Epoxy Solutions covers residential, commercial, and industrial floors with finish systems that balance
+        prep, texture, color, gloss, and maintenance.
+      </p>
+      <div class="inline-actions">
+        <a class="button" href="/quote">Build my quote</a>
+        <a class="button button-secondary" href={business.phoneHref}>Call {business.phoneDisplay}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell styles-grid">
+      {
+        serviceEntries.map((entry) => (
+          <article class="service-card" id={entrySlug(entry.id)}>
+            {entry.data.image && (
+              <img src={entry.data.image} alt={`${entry.data.title} finish preview`} loading="lazy" decoding="async" />
+            )}
+            <span class="kicker">{entry.data.finishType}</span>
+            <h2>{entry.data.title}</h2>
+            <p>{entry.data.description}</p>
+            <a class="button button-secondary" href={`/services/${entrySlug(entry.id)}`}>
+              View details
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-heading">
+        <span class="kicker">Also available</span>
+        <h2>Solid colors, glitter, logos, and custom details.</h2>
+        <p>
+          Some projects need a simple solid finish. Others need branded logo details, glitter, borders, color zoning, or
+          countertop resurfacing. The quote form collects those details up front.
+        </p>
+      </div>
+      <div class="cards-grid">
+        {
+          services.slice(3).map((service) => (
+            <article class="card" id={service.id}>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+              <ul class="check-list">
+                {service.features.map((feature) => (
+                  <li>{feature}</li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell final-cta">
+      <span class="kicker">Free estimate</span>
+      <h2>Send the slab, the style, and the timeline.</h2>
+      <p class="lede">Photos, square footage, surface condition, and finish choice help PRVN quote faster.</p>
+      <div class="inline-actions">
+        <a class="button" href="/quote">Start quote wizard</a>
+        <a class="button button-secondary" href={business.emailHref}>Email photos</a>
+      </div>
+    </div>
+  </section>
+</Layout>

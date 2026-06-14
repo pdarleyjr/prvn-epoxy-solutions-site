@@ -1,0 +1,256 @@
+---
+import { business, finishFamilies, services } from '~/data/site';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Free Epoxy Floor Quote',
+  description:
+    'Request a PRVN Epoxy Solutions quote for flake, quartz, metallic, solid, countertop, logo, or custom epoxy systems.',
+};
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<Layout metadata={metadata}>
+  <section class="page-hero">
+    <div class="shell section-heading">
+      <span class="kicker">Free quote</span>
+      <h1>Tell PRVN what the concrete needs to become.</h1>
+      <p>
+        This polished wizard sends the project details to PRVN by email when a Resend API key and verified sender are
+        configured in Cloudflare Pages.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell split-grid">
+      <form class="quote-panel" id="quote-form" data-quote-form>
+        <div class="quote-steps" aria-hidden="true">
+          <span class="is-active" data-step-dot="0"></span>
+          <span data-step-dot="1"></span>
+          <span data-step-dot="2"></span>
+        </div>
+
+        <input
+          class="honeypot"
+          type="text"
+          name="companyWebsite"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+          aria-label="Leave this field blank"
+        />
+
+        <fieldset data-step="0" class="is-active">
+          <legend class="form-legend">Step 1 / Project</legend>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="projectType">Project type</label>
+              <select id="projectType" name="projectType" required>
+                <option value="">Select one</option>
+                <option>Residential garage</option>
+                <option>Residential interior</option>
+                <option>Commercial space</option>
+                <option>Industrial / heavy-use</option>
+                <option>Countertops</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="finishPreference">Finish preference</label>
+              <select id="finishPreference" name="finishPreference" required>
+                <option value="">Select one</option>
+                {finishFamilies.map((finish) => <option>{finish.title}</option>)}
+                {services.slice(3).map((service) => <option>{service.title}</option>)}
+                <option>Not sure yet</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="squareFeet">Approx. square feet</label>
+              <input id="squareFeet" name="squareFeet" inputmode="numeric" placeholder="Example: 450" />
+            </div>
+            <div class="form-field">
+              <label for="surfaceCondition">Current concrete condition</label>
+              <select id="surfaceCondition" name="surfaceCondition">
+                <option value="">Select one</option>
+                <option>Bare concrete</option>
+                <option>Painted or previously coated</option>
+                <option>Cracks or repairs needed</option>
+                <option>Oil, stains, or moisture concerns</option>
+                <option>Not sure</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset data-step="1">
+          <legend class="form-legend">Step 2 / Contact</legend>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="name">Name</label>
+              <input id="name" name="name" autocomplete="name" required />
+            </div>
+            <div class="form-field">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" autocomplete="tel" required />
+            </div>
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="form-field">
+              <label for="location">Project location</label>
+              <input
+                id="location"
+                name="location"
+                autocomplete="street-address"
+                placeholder="City or address"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label for="timeline">Desired timeline</label>
+              <select id="timeline" name="timeline">
+                <option value="">Select one</option>
+                <option>As soon as possible</option>
+                <option>Within 2 weeks</option>
+                <option>This month</option>
+                <option>Planning ahead</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset data-step="2">
+          <legend class="form-legend">Step 3 / Details</legend>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="message">Project notes</label>
+              <textarea
+                id="message"
+                name="message"
+                placeholder="Tell PRVN about use, color ideas, coatings, cracks, and any photo links."
+                required></textarea>
+            </div>
+            <div class="form-field">
+              <label for="photoLinks">Photo links</label>
+              <input id="photoLinks" name="photoLinks" placeholder="Google Drive, iCloud, Dropbox, or photo URLs" />
+            </div>
+            {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="dark" />}
+            <p class="form-status" data-form-status aria-live="polite"></p>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button class="button button-secondary" type="button" data-prev hidden>Back</button>
+          <button class="button" type="button" data-next>Next</button>
+          <button class="button" type="submit" data-submit hidden>Send quote request</button>
+        </div>
+      </form>
+
+      <aside class="contact-card">
+        <span class="kicker">What helps</span>
+        <h2>Photos make the estimate sharper.</h2>
+        <p>
+          Include square footage, slab photos, finish preference, timeline, and whether the space has existing coatings.
+        </p>
+        <ul class="check-list">
+          <li>Wide photos of the whole floor</li>
+          <li>Closeups of cracks, stains, or coatings</li>
+          <li>Door thresholds, drains, steps, and edges</li>
+          <li>Preferred flake, quartz, metallic, solid, or custom finish</li>
+        </ul>
+        <div class="inline-actions">
+          <a class="button button-secondary" href={business.phoneHref}>Call {business.phoneDisplay}</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+{turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
+
+<script>
+  const form = document.querySelector('[data-quote-form]');
+
+  if (form instanceof HTMLFormElement) {
+    const steps = Array.from(form.querySelectorAll('[data-step]'));
+    const dots = Array.from(form.querySelectorAll('[data-step-dot]'));
+    const prev = form.querySelector('[data-prev]');
+    const next = form.querySelector('[data-next]');
+    const submit = form.querySelector('[data-submit]');
+    const status = form.querySelector('[data-form-status]');
+    let step = 0;
+
+    const setStatus = (message: string, isError = false) => {
+      if (!status) return;
+      status.textContent = message;
+      status.classList.toggle('is-error', isError);
+    };
+
+    const showStep = () => {
+      steps.forEach((item, index) => item.classList.toggle('is-active', index === step));
+      dots.forEach((item, index) => item.classList.toggle('is-active', index <= step));
+      if (prev instanceof HTMLButtonElement) prev.hidden = step === 0;
+      if (next instanceof HTMLButtonElement) next.hidden = step === steps.length - 1;
+      if (submit instanceof HTMLButtonElement) submit.hidden = step !== steps.length - 1;
+      setStatus('');
+    };
+
+    const currentStepValid = () => {
+      const current = steps[step];
+      const fields = Array.from(current.querySelectorAll('input, select, textarea'));
+      return fields.every(
+        (field) =>
+          !(
+            field instanceof HTMLInputElement ||
+            field instanceof HTMLSelectElement ||
+            field instanceof HTMLTextAreaElement
+          ) || field.reportValidity()
+      );
+    };
+
+    next?.addEventListener('click', () => {
+      if (!currentStepValid()) return;
+      step = Math.min(step + 1, steps.length - 1);
+      showStep();
+    });
+
+    prev?.addEventListener('click', () => {
+      step = Math.max(step - 1, 0);
+      showStep();
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!currentStepValid()) return;
+      setStatus('Sending request...');
+      if (submit instanceof HTMLButtonElement) submit.disabled = true;
+
+      const payload = Object.fromEntries(new FormData(form).entries());
+
+      try {
+        const response = await fetch('/api/quote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) {
+          throw new Error(result.message || 'Quote request could not be sent yet.');
+        }
+        form.reset();
+        step = 0;
+        showStep();
+        setStatus('Request sent. PRVN will follow up using the contact details provided.');
+      } catch (error) {
+        setStatus(error instanceof Error ? error.message : 'Quote request could not be sent yet.', true);
+      } finally {
+        if (submit instanceof HTMLButtonElement) submit.disabled = false;
+      }
+    });
+
+    showStep();
+  }
+</script>

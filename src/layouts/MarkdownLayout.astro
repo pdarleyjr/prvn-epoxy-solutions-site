@@ -1,0 +1,26 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import type { MetaData } from '~/types';
+
+export interface Props {
+  frontmatter: {
+    title?: string;
+  };
+}
+
+const { frontmatter } = Astro.props;
+
+const metadata: MetaData = {
+  title: frontmatter?.title,
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="page-hero">
+    <article class="shell card legal-copy">
+      <h1>{frontmatter.title}</h1>
+      <slot />
+    </article>
+  </section>
+</Layout>

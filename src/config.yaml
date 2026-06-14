@@ -1,0 +1,71 @@
+site:
+  name: PRVN Epoxy Solutions
+  site: 'https://prvn-epoxy-solutions-site.pages.dev'
+  base: '/'
+  trailingSlash: false
+
+  googleSiteVerificationId: null
+
+metadata:
+  title:
+    default: PRVN Epoxy Solutions
+    template: '%s | PRVN Epoxy Solutions'
+  description: 'Premium epoxy floor coatings for residential, commercial, and industrial spaces. Flake, quartz, metallic, solid, glitter, countertop, and logo epoxy systems.'
+  robots:
+    index: true
+    follow: true
+  openGraph:
+    site_name: PRVN Epoxy Solutions
+    images:
+      - url: '~/assets/images/og-prvn-epoxy.jpg'
+        width: 1200
+        height: 630
+    type: website
+  twitter:
+    handle: ''
+    site: ''
+    cardType: summary_large_image
+
+i18n:
+  language: en
+  textDirection: ltr
+
+apps:
+  blog:
+    isEnabled: false
+    postsPerPage: 6
+
+    post:
+      isEnabled: false
+      permalink: '/%slug%'
+      robots:
+        index: false
+
+    list:
+      isEnabled: false
+      pathname: 'blog'
+      robots:
+        index: false
+
+    category:
+      isEnabled: false
+      pathname: 'category'
+      robots:
+        index: false
+
+    tag:
+      isEnabled: false
+      pathname: 'tag'
+      robots:
+        index: false
+
+    isRelatedPostsEnabled: false
+    relatedPostsCount: 0
+
+analytics:
+  vendors:
+    googleAnalytics:
+      id: null
+
+ui:
+  theme: 'dark:only'

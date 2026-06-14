@@ -1,0 +1,83 @@
+---
+import { getCollection, render } from 'astro:content';
+import JsonLd from '~/components/JsonLd.astro';
+import { business } from '~/data/site';
+import Layout from '~/layouts/PageLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('services');
+  return entries.map((entry) => ({ params: { slug: entry.id.replace(/\.(md|mdx)$/i, '') }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const metadata = {
+  title: entry.data.title,
+  description: entry.data.description,
+};
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: entry.data.title,
+  description: entry.data.description,
+  provider: {
+    '@type': 'HomeAndConstructionBusiness',
+    name: business.name,
+    telephone: business.phoneDisplay,
+    email: business.email,
+  },
+  serviceType: entry.data.finishType,
+  areaServed: 'Service area pending confirmation',
+};
+---
+
+<Layout metadata={metadata}>
+  <JsonLd data={schema} />
+
+  <section class="page-hero">
+    <div class="shell split-grid">
+      <div class="section-heading">
+        <span class="kicker">{entry.data.finishType}</span>
+        <h1>{entry.data.title}</h1>
+        <p>{entry.data.description}</p>
+        <div class="inline-actions">
+          <a class="button" href="/quote">Quote this finish</a>
+          <a class="button button-secondary" href="/services">All services</a>
+        </div>
+      </div>
+      {
+        entry.data.image && (
+          <img
+            class="service-detail-image"
+            src={entry.data.image}
+            alt={`${entry.data.title} finish preview`}
+            loading="eager"
+            decoding="async"
+          />
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell split-grid">
+      <article class="card">
+        <h2>What to expect</h2>
+        <div class="prose prose-invert max-w-none">
+          <Content />
+        </div>
+      </article>
+      <article class="card">
+        <h2>Quote details that help</h2>
+        <ul class="check-list">
+          <li>Square footage and photos of the current slab</li>
+          <li>Cracks, stains, moisture, or previous coating concerns</li>
+          <li>Preferred color, chip blend, gloss level, or sample reference</li>
+          <li>Target timeline and when the space needs to return to use</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+</Layout>
