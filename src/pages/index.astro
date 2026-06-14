@@ -38,33 +38,6 @@ const localBusinessSchema = {
 
   <section class="hero">
     <div class="hero-grid shell">
-      <div>
-        <span class="eyebrow">New epoxy flake floors in as little as 24 hours</span>
-        <h1>Gloss, grit, and concrete armor.</h1>
-        <p>
-          PRVN Epoxy Solutions installs premium coating systems for garages, homes, shops, showrooms, and high-use
-          commercial spaces. Call, email, or text for a free estimate.
-        </p>
-        <div class="hero-actions">
-          <a class="button" href="/quote">Start a free quote</a>
-          <a class="button button-secondary" href={business.phoneHref}>{business.phoneDisplay}</a>
-        </div>
-        <div class="hero-proof" aria-label="PRVN proof points">
-          <div class="proof-card">
-            <strong>24 hr</strong>
-            <span>Flake floor install options after prep review</span>
-          </div>
-          <div class="proof-card">
-            <strong>3 ways</strong>
-            <span>Call, text, or email for a free estimate</span>
-          </div>
-          <div class="proof-card">
-            <strong>R / C / I</strong>
-            <span>Residential, commercial, and industrial coatings</span>
-          </div>
-        </div>
-      </div>
-
       <div class="hero-media" aria-label="PRVN epoxy floor finish preview">
         <picture>
           <source srcset="/assets/hero-floor-1600.avif" type="image/avif" media="(min-width: 900px)" />
@@ -77,14 +50,36 @@ const localBusinessSchema = {
             decoding="async"
           />
         </picture>
-        <picture class="machine-cutout" aria-hidden="true">
-          <source srcset="/assets/prvn-machine.webp" type="image/webp" media="(min-width: 720px)" />
-          <source srcset="/assets/prvn-machine-mobile.webp" type="image/webp" />
-          <img src="/assets/prvn-machine.png" alt="" loading="eager" decoding="async" />
-        </picture>
-        <div class="media-badge">
-          <strong>Decorative concrete coating technology</strong>
-          <span>Flake, quartz, solid, metallic, glitter, countertops, and logo detail systems.</span>
+      </div>
+
+      <div class="hero-copy">
+        <div class="hero-title-block">
+          <span class="eyebrow">New epoxy flake floors in as little as 24 hours</span>
+          <h1>Gloss, grit, and concrete armor.</h1>
+        </div>
+        <div class="hero-support">
+          <p>
+            PRVN Epoxy Solutions installs premium coating systems for garages, homes, shops, showrooms, and high-use
+            commercial spaces. Call, email, or text for a free estimate.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="/quote">Start a free quote</a>
+            <a class="button button-secondary" href={business.phoneHref}>{business.phoneDisplay}</a>
+          </div>
+          <div class="hero-proof" aria-label="PRVN proof points">
+            <div class="proof-card">
+              <strong>24 hr</strong>
+              <span>Flake floor install options after prep review</span>
+            </div>
+            <div class="proof-card">
+              <strong>3 ways</strong>
+              <span>Call, text, or email for a free estimate</span>
+            </div>
+            <div class="proof-card">
+              <strong>R / C / I</strong>
+              <span>Residential, commercial, and industrial coatings</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
