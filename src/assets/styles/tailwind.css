@@ -269,7 +269,7 @@ main {
 }
 
 .hero-grid.shell {
-  width: min(1500px, calc(100vw - 32px));
+  width: min(1320px, calc(100vw - 32px));
 }
 
 .hero-copy {
