@@ -10,7 +10,7 @@ metadata:
   title:
     default: PRVN Epoxy Solutions
     template: '%s | PRVN Epoxy Solutions'
-  description: 'Premium epoxy floor coatings for residential, commercial, and industrial spaces. Flake, quartz, metallic, solid, glitter, countertop, and logo epoxy systems.'
+  description: 'Premium epoxy floor coatings for residential, commercial, and industrial spaces from the Florida Keys to West Palm Beach. Flake, quartz, metallic, solid, glitter, countertop, and logo epoxy systems.'
   robots:
     index: true
     follow: true

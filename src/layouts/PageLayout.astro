@@ -17,7 +17,7 @@ const { metadata } = Astro.props;
   <header class="site-header" data-site-header>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="nav-shell">
-      <a class="brand-link" href="/" aria-label="PRVN Epoxy Solutions home">
+      <a class="brand-link" href="/" aria-label="PRVN Epoxy Solutions home" transition:name="site-logo">
         <Logo />
       </a>
 
@@ -39,10 +39,10 @@ const { metadata } = Astro.props;
       </nav>
 
       <div class="nav-actions">
-        <a class="phone-link" href={business.phoneHref}>{business.phoneDisplay}</a>
+        <a class="phone-link" href={business.phoneHref} data-cta="call">{business.phoneDisplay}</a>
         {
           headerData.actions.map((action) => (
-            <a class="button button-small" href={action.href}>
+            <a class="button button-small" href={action.href} data-cta="quote" data-magnetic>
               {action.text}
             </a>
           ))
@@ -67,7 +67,12 @@ const { metadata } = Astro.props;
           <div class="footer-column">
             <h2>{group.title}</h2>
             {group.links.map((link) => (
-              <a href={link.href}>{link.text}</a>
+              <a
+                href={link.href}
+                data-cta={link.href.startsWith('tel:') ? 'call' : link.href.startsWith('sms:') ? 'text' : undefined}
+              >
+                {link.text}
+              </a>
             ))}
           </div>
         ))
@@ -98,5 +103,12 @@ const { metadata } = Astro.props;
     button?.setAttribute('aria-expanded', 'false');
     header?.classList.remove('is-open');
     nav.classList.remove('is-open');
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    button?.setAttribute('aria-expanded', 'false');
+    header?.classList.remove('is-open');
+    nav?.classList.remove('is-open');
   });
 </script>

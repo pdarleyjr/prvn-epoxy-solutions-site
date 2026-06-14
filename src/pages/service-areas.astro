@@ -1,48 +1,74 @@
 ---
+import JsonLd from '~/components/JsonLd.astro';
+import { business, serviceAreaCoverage, siteUrl } from '~/data/site';
 import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
-  title: 'Service Areas',
-  description: 'PRVN Epoxy Solutions service-area details. City-specific pages are pending confirmation before launch.',
+  title: 'South Florida Epoxy Floor Service Areas',
+  description:
+    'PRVN Epoxy Solutions serves South Florida epoxy floor projects from the Florida Keys through Miami-Dade and Broward to Palm Beach and West Palm Beach.',
+};
+
+const serviceAreaSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  '@id': `${siteUrl}/#business`,
+  name: business.name,
+  telephone: '+19546554199',
+  email: business.email,
+  url: `${siteUrl}/service-areas`,
+  areaServed: serviceAreaCoverage.schema,
 };
 ---
 
 <Layout metadata={metadata}>
-  <section class="page-hero">
-    <div class="shell section-heading">
+  <JsonLd data={serviceAreaSchema} />
+
+  <section class="page-hero" data-section="service-area-hero">
+    <div class="shell section-heading" data-reveal>
       <span class="kicker">Service area</span>
-      <h1>Coverage details are ready for confirmation.</h1>
-      <p>
-        City-specific epoxy floor service pages should not be published until PRVN confirms the exact address, service
-        radius, cities served, and whether to display a physical address or service-area-only business profile.
-      </p>
-      <a class="button" href="/quote">Ask if your project is covered</a>
+      <h1>South Florida epoxy floors from the Keys to West Palm Beach.</h1>
+      <p>{serviceAreaCoverage.description}</p>
+      <div class="inline-actions">
+        <a class="button" href="/quote" data-cta="quote" data-magnetic>Check your project</a>
+        <a class="button button-secondary" href={business.phoneHref} data-cta="call">Call {business.phoneDisplay}</a>
+      </div>
     </div>
   </section>
 
   <section class="section">
     <div class="shell cards-grid">
-      <article class="card">
-        <h2>Pending business details</h2>
+      <article class="card" data-reveal>
+        <h2>Coverage corridor</h2>
         <p>
-          Exact domain, legal name, address preference, confirmed cities, and Google Business Profile should be supplied
-          before local SEO pages go live.
+          PRVN covers epoxy floor projects across the South Florida corridor, including the Florida Keys, Miami-Dade,
+          Broward, Palm Beach, and West Palm Beach.
         </p>
       </article>
-      <article class="card">
-        <h2>Safe launch behavior</h2>
+      <article class="card" data-reveal>
+        <h2>Project fit still matters</h2>
         <p>
-          The website can launch with a general service-area page and quote form without claiming unconfirmed city
-          coverage.
+          Final scheduling depends on project access, surface condition, coating system, timing, and whether the job is
+          residential, commercial, or industrial.
         </p>
       </article>
-      <article class="card">
-        <h2>Future city pages</h2>
+      <article class="card" data-reveal>
+        <h2>City pages later</h2>
         <p>
-          Once confirmed, each city page can include unique project copy, LocalBusiness schema, service schema, and a
-          city-specific quote CTA.
+          This page now uses confirmed broad coverage. City-specific landing pages can be added later with real project
+          photos, address preferences, and Google Business Profile details.
         </p>
       </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell service-area-list" data-reveal>
+      <span class="kicker">Confirmed regions</span>
+      <h2>Coverage includes</h2>
+      <ul class="check-list">
+        {serviceAreaCoverage.regions.map((region) => <li>{region}</li>)}
+      </ul>
     </div>
   </section>
 </Layout>

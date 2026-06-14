@@ -10,8 +10,8 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <section class="page-hero">
-    <div class="shell section-heading">
+  <section class="page-hero" data-section="process-hero">
+    <div class="shell section-heading" data-reveal>
       <span class="kicker">Process</span>
       <h1>Premium epoxy starts before the first coat.</h1>
       <p>
@@ -22,10 +22,10 @@ const metadata = {
   </section>
 
   <section class="section">
-    <div class="shell timeline">
+    <div class="shell timeline" data-process-timeline>
       {
-        processSteps.map((step) => (
-          <article>
+        processSteps.map((step, index) => (
+          <article data-reveal data-reveal-delay={index * 0.07}>
             <h2>{step.title}</h2>
             <p>{step.text}</p>
           </article>
@@ -39,7 +39,7 @@ const metadata = {
       <span class="kicker">Free estimate</span>
       <h2>Send photos before you schedule.</h2>
       <p class="lede">Photos help identify cracks, coatings, stains, joints, and prep conditions before pricing.</p>
-      <a class="button" href="/quote">Start quote wizard</a>
+      <a class="button" href="/quote" data-cta="quote" data-magnetic>Start quote wizard</a>
     </div>
   </section>
 </Layout>

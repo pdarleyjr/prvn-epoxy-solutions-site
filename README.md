@@ -45,11 +45,14 @@ PUBLIC_TURNSTILE_SITE_KEY=
 
 `QUOTE_FROM_EMAIL` must be a Resend-verified sender or domain address. The quote API returns a configuration error instead of pretending email delivery works when `RESEND_API_KEY` or `QUOTE_FROM_EMAIL` is missing.
 
+## Confirmed service coverage
+
+PRVN covers South Florida from the Florida Keys through Miami-Dade and Broward to Palm Beach and West Palm Beach. City-specific pages should still wait for real project photos, address preferences, and Google Business Profile details.
+
 ## Launch details still needed
 
 - Production domain and DNS preference
 - Legal business name and address/service-area display preference
-- Confirmed cities or service radius
 - Google Business Profile, Instagram, and Facebook URLs
 - License, insurance, warranty, and care details
 - Approved reviews and before/after photos

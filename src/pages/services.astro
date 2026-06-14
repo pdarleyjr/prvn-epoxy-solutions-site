@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import JsonLd from '~/components/JsonLd.astro';
-import { business, services } from '~/data/site';
+import { business, serviceAreaCoverage, services } from '~/data/site';
 import Layout from '~/layouts/PageLayout.astro';
 
 const serviceEntries = (await getCollection('services')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
@@ -21,28 +21,28 @@ const serviceSchema = serviceEntries.map((entry) => ({
   provider: {
     '@type': 'HomeAndConstructionBusiness',
     name: business.name,
-    telephone: business.phoneDisplay,
+    telephone: '+19546554199',
     email: business.email,
   },
   serviceType: entry.data.finishType,
-  areaServed: 'Service area pending confirmation',
+  areaServed: serviceAreaCoverage.schema,
 }));
 ---
 
 <Layout metadata={metadata}>
   <JsonLd data={serviceSchema} />
 
-  <section class="page-hero">
-    <div class="shell section-heading">
+  <section class="page-hero" data-section="services-hero">
+    <div class="shell section-heading" data-reveal>
       <span class="kicker">Services</span>
       <h1>Coating systems for the way your concrete gets used.</h1>
       <p>
-        PRVN Epoxy Solutions covers residential, commercial, and industrial floors with finish systems that balance
-        prep, texture, color, gloss, and maintenance.
+        PRVN Epoxy Solutions covers residential, commercial, and industrial floors from the Florida Keys to West Palm
+        Beach with finish systems that balance prep, texture, color, gloss, and maintenance.
       </p>
       <div class="inline-actions">
-        <a class="button" href="/quote">Build my quote</a>
-        <a class="button button-secondary" href={business.phoneHref}>Call {business.phoneDisplay}</a>
+        <a class="button" href="/quote" data-cta="quote" data-magnetic>Build my quote</a>
+        <a class="button button-secondary" href={business.phoneHref} data-cta="call">Call {business.phoneDisplay}</a>
       </div>
     </div>
   </section>
@@ -51,14 +51,14 @@ const serviceSchema = serviceEntries.map((entry) => ({
     <div class="shell styles-grid">
       {
         serviceEntries.map((entry) => (
-          <article class="service-card" id={entrySlug(entry.id)}>
+          <article class="service-card" id={entrySlug(entry.id)} data-tilt data-reveal>
             {entry.data.image && (
               <img src={entry.data.image} alt={`${entry.data.title} finish preview`} loading="lazy" decoding="async" />
             )}
             <span class="kicker">{entry.data.finishType}</span>
             <h2>{entry.data.title}</h2>
             <p>{entry.data.description}</p>
-            <a class="button button-secondary" href={`/services/${entrySlug(entry.id)}`}>
+            <a class="button button-secondary" href={`/services/${entrySlug(entry.id)}`} data-cta="service-detail">
               View details
             </a>
           </article>
@@ -80,7 +80,7 @@ const serviceSchema = serviceEntries.map((entry) => ({
       <div class="cards-grid">
         {
           services.slice(3).map((service) => (
-            <article class="card" id={service.id}>
+            <article class="card" id={service.id} data-reveal>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
               <ul class="check-list">
@@ -101,8 +101,8 @@ const serviceSchema = serviceEntries.map((entry) => ({
       <h2>Send the slab, the style, and the timeline.</h2>
       <p class="lede">Photos, square footage, surface condition, and finish choice help PRVN quote faster.</p>
       <div class="inline-actions">
-        <a class="button" href="/quote">Start quote wizard</a>
-        <a class="button button-secondary" href={business.emailHref}>Email photos</a>
+        <a class="button" href="/quote" data-cta="quote" data-magnetic>Start quote wizard</a>
+        <a class="button button-secondary" href={business.emailHref} data-cta="email">Email photos</a>
       </div>
     </div>
   </section>

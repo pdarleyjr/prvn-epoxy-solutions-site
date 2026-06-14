@@ -16,10 +16,10 @@ export const footerData = {
     {
       title: 'Services',
       links: [
-        { text: 'Flake epoxy', href: getPermalink('/services#flake') },
-        { text: 'Quartz epoxy', href: getPermalink('/services#quartz') },
-        { text: 'Metallic epoxy', href: getPermalink('/services#metallic') },
-        { text: 'Countertops', href: getPermalink('/services#countertops') },
+        { text: 'Flake epoxy', href: getPermalink('/services/flake-epoxy') },
+        { text: 'Quartz epoxy', href: getPermalink('/services/quartz-epoxy') },
+        { text: 'Metallic epoxy', href: getPermalink('/services/metallic-epoxy') },
+        { text: 'Countertops', href: getPermalink('/services/epoxy-countertops') },
       ],
     },
     {
@@ -36,6 +36,7 @@ export const footerData = {
       links: [
         { text: 'Get a quote', href: getPermalink('/quote') },
         { text: 'Call 954-655-4199', href: 'tel:+19546554199' },
+        { text: 'Text PRVN', href: 'sms:+19546554199' },
         { text: 'Email PRVN', href: 'mailto:PRVNEPOXY@OUTLOOK.COM' },
       ],
     },
@@ -44,5 +45,5 @@ export const footerData = {
     { text: 'Privacy', href: getPermalink('/privacy') },
     { text: 'Terms', href: getPermalink('/terms') },
   ],
-  footNote: 'Residential | Commercial | Industrial epoxy floor coatings.',
+  footNote: 'Residential | Commercial | Industrial epoxy floor coatings from the Florida Keys to West Palm Beach.',
 };

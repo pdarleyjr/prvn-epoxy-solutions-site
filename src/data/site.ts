@@ -1,17 +1,44 @@
+export const siteUrl = 'https://prvn-epoxy-solutions-site.pages.dev';
+
 export const business = {
   name: 'PRVN Epoxy Solutions',
   email: 'PRVNEPOXY@OUTLOOK.COM',
   emailHref: 'mailto:PRVNEPOXY@OUTLOOK.COM',
   phoneDisplay: '954-655-4199',
   phoneHref: 'tel:+19546554199',
+  smsHref: 'sms:+19546554199',
   tagline: 'Premium epoxy floors for residential, commercial, and industrial spaces.',
   shortTagline: 'Residential | Commercial | Industrial',
+};
+
+export const serviceAreaCoverage = {
+  summary: 'Florida Keys to West Palm Beach',
+  description:
+    'PRVN Epoxy Solutions serves South Florida from the Florida Keys through Miami-Dade and Broward to Palm Beach and West Palm Beach.',
+  regions: [
+    'Florida Keys',
+    'Miami-Dade County',
+    'Miami',
+    'Broward County',
+    'Fort Lauderdale area',
+    'Palm Beach County',
+    'West Palm Beach',
+  ],
+  schema: [
+    { '@type': 'AdministrativeArea', name: 'Florida Keys' },
+    { '@type': 'AdministrativeArea', name: 'Miami-Dade County' },
+    { '@type': 'City', name: 'Miami' },
+    { '@type': 'AdministrativeArea', name: 'Broward County' },
+    { '@type': 'AdministrativeArea', name: 'Palm Beach County' },
+    { '@type': 'City', name: 'West Palm Beach' },
+  ],
 };
 
 export const finishFamilies = [
   {
     id: 'flake',
     title: 'Flake epoxy',
+    href: '/services/flake-epoxy',
     description: 'A durable, textured system for garages, shops, utility areas, and high-traffic spaces.',
     image: '/assets/style-flake.webp',
     avif: '/assets/style-flake.avif',
@@ -20,6 +47,7 @@ export const finishFamilies = [
   {
     id: 'quartz',
     title: 'Quartz epoxy',
+    href: '/services/quartz-epoxy',
     description: 'A denser aggregate look with serious grip, polished depth, and commercial-grade toughness.',
     image: '/assets/style-quartz.webp',
     avif: '/assets/style-quartz.avif',
@@ -28,6 +56,7 @@ export const finishFamilies = [
   {
     id: 'metallic',
     title: 'Metallic epoxy',
+    href: '/services/metallic-epoxy',
     description: 'A fluid, high-gloss statement floor with marble-like movement and a custom finish.',
     image: '/assets/style-metallic.webp',
     avif: '/assets/style-metallic.avif',
@@ -96,12 +125,84 @@ export const processSteps = [
   },
 ];
 
+export const proofPoints = [
+  {
+    value: 24,
+    suffix: ' hr',
+    label: 'Flake floor install options after prep review',
+  },
+  {
+    value: 3,
+    suffix: ' ways',
+    label: 'Call, text, or email for a free estimate',
+  },
+  {
+    display: 'R / C / I',
+    label: 'Residential, commercial, and industrial coatings',
+  },
+];
+
+export const galleryFilters = [
+  { id: 'all', label: 'All' },
+  { id: 'flake', label: 'Flake' },
+  { id: 'quartz', label: 'Quartz' },
+  { id: 'metallic', label: 'Metallic' },
+  { id: 'garage', label: 'Garage' },
+  { id: 'commercial', label: 'Commercial' },
+  { id: 'custom', label: 'Countertops / custom' },
+];
+
 export const galleryImages = [
-  { src: '/assets/gallery-project-01.webp', alt: 'PRVN epoxy project gallery image' },
-  { src: '/assets/gallery-project-02.webp', alt: 'Completed PRVN epoxy floor project' },
-  { src: '/assets/gallery-project-03.webp', alt: 'PRVN epoxy floor concept gallery image' },
-  { src: '/assets/gallery-project-04.webp', alt: 'PRVN epoxy floor concept gallery image' },
-  { src: '/assets/gallery-project-05.webp', alt: 'PRVN epoxy floor concept gallery image' },
+  {
+    src: '/assets/gallery-project-01.webp',
+    full: '/assets/gallery-project-01.webp',
+    alt: 'PRVN epoxy visual gallery image with a premium floor finish concept',
+    caption: 'Custom finish concept image. Project category pending confirmation.',
+    badge: 'Custom / concept',
+    categories: ['custom'],
+    width: 941,
+    height: 1672,
+  },
+  {
+    src: '/assets/gallery-project-02.webp',
+    full: '/assets/gallery-project-02.webp',
+    alt: 'Completed PRVN epoxy floor project with a clean reflective finish',
+    caption: 'Completed epoxy floor image supplied for the launch gallery.',
+    badge: 'Completed floor',
+    categories: ['garage'],
+    width: 1400,
+    height: 1050,
+  },
+  {
+    src: '/assets/gallery-project-03.webp',
+    full: '/assets/gallery-project-03.webp',
+    alt: 'PRVN epoxy floor concept with glossy architectural lighting',
+    caption: 'Glossy architectural epoxy concept image. Finish category pending confirmation.',
+    badge: 'Concept',
+    categories: ['custom'],
+    width: 1400,
+    height: 788,
+  },
+  {
+    src: '/assets/gallery-project-04.webp',
+    full: '/assets/gallery-project-04.webp',
+    alt: 'PRVN epoxy custom finish concept with dark premium styling',
+    caption: 'Custom finish concept image. Project category pending confirmation.',
+    badge: 'Custom / concept',
+    categories: ['custom'],
+    width: 941,
+    height: 1672,
+  },
+  {
+    src: '/assets/gallery-project-05.webp',
+    full: '/assets/gallery-project-05.webp',
+    alt: 'PRVN epoxy floor concept with metallic depth and dramatic contrast',
+    caption: 'Metallic-style concept image. Confirm exact finish before publishing as a real project.',
+    badge: 'Metallic concept',
+    categories: ['metallic', 'custom'],
+    width: 941,
+    height: 1672,
+  },
 ];
 
 export const faqs = [
@@ -117,6 +218,11 @@ export const faqs = [
   {
     question: 'Can I choose colors and finish type?',
     answer: 'Yes. The site supports flake, quartz, solid, metallic, glitter, countertop, and logo-focused options.',
+  },
+  {
+    question: 'What areas do you cover?',
+    answer:
+      'PRVN covers South Florida from the Florida Keys through Miami-Dade and Broward to Palm Beach and West Palm Beach.',
   },
   {
     question: 'What details help with a quote?',

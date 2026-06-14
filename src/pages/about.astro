@@ -1,29 +1,30 @@
 ---
-import { business, finishFamilies } from '~/data/site';
+import { business, finishFamilies, serviceAreaCoverage } from '~/data/site';
 import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
   title: 'About PRVN Epoxy Solutions',
-  description: 'PRVN Epoxy Solutions installs premium residential, commercial, and industrial epoxy coating systems.',
+  description:
+    'PRVN Epoxy Solutions installs premium residential, commercial, and industrial epoxy coating systems from the Florida Keys to West Palm Beach.',
 };
 ---
 
 <Layout metadata={metadata}>
-  <section class="page-hero">
+  <section class="page-hero" data-section="about-hero">
     <div class="shell split-grid">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <span class="kicker">About PRVN</span>
         <h1>Luxury epoxy floors with contractor-grade discipline.</h1>
         <p>
           PRVN Epoxy Solutions focuses on decorative concrete coating systems that make garages, shops, showrooms,
-          counters, and work spaces feel finished, resilient, and easy to maintain.
+          counters, and work spaces feel finished, resilient, and easy to maintain across {serviceAreaCoverage.summary}.
         </p>
         <div class="inline-actions">
-          <a class="button" href="/quote">Get a free estimate</a>
-          <a class="button button-secondary" href={business.emailHref}>Email PRVN</a>
+          <a class="button" href="/quote" data-cta="quote" data-magnetic>Get a free estimate</a>
+          <a class="button button-secondary" href={business.emailHref} data-cta="email">Email PRVN</a>
         </div>
       </div>
-      <div class="hero-media">
+      <div class="hero-media" data-reveal>
         <img
           src="/assets/gallery-install-1.webp"
           alt="PRVN epoxy brand and coating visual"
@@ -36,15 +37,15 @@ const metadata = {
 
   <section class="section">
     <div class="shell cards-grid">
-      <article class="card">
+      <article class="card" data-reveal>
         <h2>What PRVN does</h2>
         <p>{business.tagline}</p>
       </article>
-      <article class="card">
+      <article class="card" data-reveal>
         <h2>How PRVN helps</h2>
         <p>Free estimates can begin by phone, text, email, or the quote wizard with photos and project details.</p>
       </article>
-      <article class="card">
+      <article class="card" data-reveal>
         <h2>What comes next</h2>
         <p>
           Warranty, insurance, license, address, social profiles, and Google Business Profile details should be
@@ -56,14 +57,14 @@ const metadata = {
 
   <section class="section">
     <div class="shell">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <span class="kicker">Finish families</span>
         <h2>Flake, quartz, metallic, and custom detail systems.</h2>
       </div>
       <div class="styles-grid">
         {
           finishFamilies.map((finish) => (
-            <article class="service-card">
+            <article class="service-card" data-tilt data-reveal>
               <img src={finish.image} alt={`${finish.title} finish sample`} loading="lazy" decoding="async" />
               <h3>{finish.title}</h3>
               <p>{finish.description}</p>

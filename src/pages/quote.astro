@@ -5,28 +5,29 @@ import Layout from '~/layouts/PageLayout.astro';
 const metadata = {
   title: 'Free Epoxy Floor Quote',
   description:
-    'Request a PRVN Epoxy Solutions quote for flake, quartz, metallic, solid, countertop, logo, or custom epoxy systems.',
+    'Request a PRVN Epoxy Solutions quote for premium epoxy floors from the Florida Keys to West Palm Beach.',
 };
 
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
 <Layout metadata={metadata}>
-  <section class="page-hero">
-    <div class="shell section-heading">
+  <section class="page-hero" data-section="quote-hero">
+    <div class="shell section-heading" data-reveal>
       <span class="kicker">Free quote</span>
       <h1>Tell PRVN what the concrete needs to become.</h1>
       <p>
-        This polished wizard sends the project details to PRVN by email when a Resend API key and verified sender are
-        configured in Cloudflare Pages.
+        Share the floor type, location, finish direction, timeline, and photo links. If the web form is unavailable,
+        call or text PRVN directly.
       </p>
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" data-section="quote-form">
     <div class="shell split-grid">
-      <form class="quote-panel" id="quote-form" data-quote-form>
-        <div class="quote-steps" aria-hidden="true">
+      <form class="quote-panel" id="quote-form" data-quote-form novalidate data-reveal>
+        <p class="step-status" data-step-status aria-live="polite">Step 1 of 3: Project</p>
+        <div class="quote-steps" role="list" aria-label="Quote progress">
           <span class="is-active" data-step-dot="0"></span>
           <span data-step-dot="1"></span>
           <span data-step-dot="2"></span>
@@ -42,11 +43,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           aria-label="Leave this field blank"
         />
 
-        <fieldset data-step="0" class="is-active">
-          <legend class="form-legend">Step 1 / Project</legend>
+        <fieldset data-step="0" class="is-active" aria-labelledby="quote-step-1">
+          <legend class="form-legend" id="quote-step-1" tabindex="-1">Step 1 / Project</legend>
           <div class="form-grid">
             <div class="form-field">
-              <label for="projectType">Project type</label>
+              <label for="projectType">Project type <span>Required</span></label>
               <select id="projectType" name="projectType" required>
                 <option value="">Select one</option>
                 <option>Residential garage</option>
@@ -58,7 +59,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
               </select>
             </div>
             <div class="form-field">
-              <label for="finishPreference">Finish preference</label>
+              <label for="finishPreference">Finish preference <span>Required</span></label>
               <select id="finishPreference" name="finishPreference" required>
                 <option value="">Select one</option>
                 {finishFamilies.map((finish) => <option>{finish.title}</option>)}
@@ -68,7 +69,13 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             </div>
             <div class="form-field">
               <label for="squareFeet">Approx. square feet</label>
-              <input id="squareFeet" name="squareFeet" inputmode="numeric" placeholder="Example: 450" />
+              <input
+                id="squareFeet"
+                name="squareFeet"
+                inputmode="numeric"
+                pattern="[0-9, ]*"
+                placeholder="Example: 450"
+              />
             </div>
             <div class="form-field">
               <label for="surfaceCondition">Current concrete condition</label>
@@ -84,23 +91,23 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           </div>
         </fieldset>
 
-        <fieldset data-step="1">
-          <legend class="form-legend">Step 2 / Contact</legend>
+        <fieldset data-step="1" aria-labelledby="quote-step-2">
+          <legend class="form-legend" id="quote-step-2" tabindex="-1">Step 2 / Contact</legend>
           <div class="form-grid">
             <div class="form-field">
-              <label for="name">Name</label>
+              <label for="name">Name <span>Required</span></label>
               <input id="name" name="name" autocomplete="name" required />
             </div>
             <div class="form-field">
-              <label for="phone">Phone</label>
-              <input id="phone" name="phone" autocomplete="tel" required />
+              <label for="phone">Phone <span>Required</span></label>
+              <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required />
             </div>
             <div class="form-field">
-              <label for="email">Email</label>
+              <label for="email">Email <span>Required</span></label>
               <input id="email" name="email" type="email" autocomplete="email" required />
             </div>
             <div class="form-field">
-              <label for="location">Project location</label>
+              <label for="location">Project location <span>Required</span></label>
               <input
                 id="location"
                 name="location"
@@ -122,11 +129,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           </div>
         </fieldset>
 
-        <fieldset data-step="2">
-          <legend class="form-legend">Step 3 / Details</legend>
+        <fieldset data-step="2" aria-labelledby="quote-step-3">
+          <legend class="form-legend" id="quote-step-3" tabindex="-1">Step 3 / Details</legend>
           <div class="form-grid">
             <div class="form-field">
-              <label for="message">Project notes</label>
+              <label for="message">Project notes <span>Required</span></label>
               <textarea
                 id="message"
                 name="message"
@@ -138,7 +145,6 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
               <input id="photoLinks" name="photoLinks" placeholder="Google Drive, iCloud, Dropbox, or photo URLs" />
             </div>
             {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="dark" />}
-            <p class="form-status" data-form-status aria-live="polite"></p>
           </div>
         </fieldset>
 
@@ -147,9 +153,22 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           <button class="button" type="button" data-next>Next</button>
           <button class="button" type="submit" data-submit hidden>Send quote request</button>
         </div>
+        <p class="form-status" data-form-status aria-live="polite"></p>
+        <div class="quote-success" data-quote-success hidden tabindex="-1">
+          <span class="kicker">Request received</span>
+          <h2>PRVN will follow up using your contact details.</h2>
+          <p>If you need faster help, call or text {business.phoneDisplay}.</p>
+        </div>
+
+        <noscript>
+          <p class="form-status is-error">
+            JavaScript is required for this wizard. Please call <a href={business.phoneHref}>{business.phoneDisplay}</a>
+            or email <a href={business.emailHref}>{business.email}</a>.
+          </p>
+        </noscript>
       </form>
 
-      <aside class="contact-card">
+      <aside class="contact-card" data-reveal>
         <span class="kicker">What helps</span>
         <h2>Photos make the estimate sharper.</h2>
         <p>
@@ -162,7 +181,8 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           <li>Preferred flake, quartz, metallic, solid, or custom finish</li>
         </ul>
         <div class="inline-actions">
-          <a class="button button-secondary" href={business.phoneHref}>Call {business.phoneDisplay}</a>
+          <a class="button button-secondary" href={business.phoneHref} data-cta="call">Call {business.phoneDisplay}</a>
+          <a class="button button-secondary" href={business.smsHref} data-cta="text">Text PRVN</a>
         </div>
       </aside>
     </div>
@@ -175,58 +195,85 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   const form = document.querySelector('[data-quote-form]');
 
   if (form instanceof HTMLFormElement) {
-    const steps = Array.from(form.querySelectorAll('[data-step]'));
+    const steps = Array.from(form.querySelectorAll('fieldset[data-step]'));
     const dots = Array.from(form.querySelectorAll('[data-step-dot]'));
     const prev = form.querySelector('[data-prev]');
     const next = form.querySelector('[data-next]');
     const submit = form.querySelector('[data-submit]');
     const status = form.querySelector('[data-form-status]');
+    const stepStatus = form.querySelector('[data-step-status]');
+    const stepTrack = form.querySelector('.quote-steps');
+    const success = form.querySelector('[data-quote-success]');
+    const stepLabels = ['Project', 'Contact', 'Details'];
     let step = 0;
 
     const setStatus = (message: string, isError = false) => {
       if (!status) return;
       status.textContent = message;
       status.classList.toggle('is-error', isError);
+      status.classList.toggle('is-success', Boolean(message) && !isError);
     };
 
-    const showStep = () => {
-      steps.forEach((item, index) => item.classList.toggle('is-active', index === step));
+    const showStep = (focusLegend = false) => {
+      steps.forEach((item, index) => {
+        const active = index === step;
+        item.classList.toggle('is-active', active);
+        if (item instanceof HTMLFieldSetElement) item.hidden = !active;
+        item.toggleAttribute('inert', !active);
+      });
       dots.forEach((item, index) => item.classList.toggle('is-active', index <= step));
       if (prev instanceof HTMLButtonElement) prev.hidden = step === 0;
       if (next instanceof HTMLButtonElement) next.hidden = step === steps.length - 1;
       if (submit instanceof HTMLButtonElement) submit.hidden = step !== steps.length - 1;
+      if (stepStatus) stepStatus.textContent = `Step ${step + 1} of ${steps.length}: ${stepLabels[step]}`;
+      if (stepTrack instanceof HTMLElement) stepTrack.style.setProperty('--quote-step', String(step + 1));
       setStatus('');
+      if (focusLegend) steps[step].querySelector<HTMLElement>('legend')?.focus({ preventScroll: true });
     };
 
     const currentStepValid = () => {
       const current = steps[step];
       const fields = Array.from(current.querySelectorAll('input, select, textarea'));
-      return fields.every(
-        (field) =>
-          !(
-            field instanceof HTMLInputElement ||
-            field instanceof HTMLSelectElement ||
-            field instanceof HTMLTextAreaElement
-          ) || field.reportValidity()
-      );
+      for (const field of fields) {
+        if (
+          field instanceof HTMLInputElement ||
+          field instanceof HTMLSelectElement ||
+          field instanceof HTMLTextAreaElement
+        ) {
+          if (!field.reportValidity()) {
+            field.focus();
+            return false;
+          }
+        }
+      }
+      return true;
     };
 
     next?.addEventListener('click', () => {
       if (!currentStepValid()) return;
       step = Math.min(step + 1, steps.length - 1);
-      showStep();
+      showStep(true);
     });
 
     prev?.addEventListener('click', () => {
       step = Math.max(step - 1, 0);
-      showStep();
+      showStep(true);
     });
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
+      if (step < steps.length - 1) {
+        if (!currentStepValid()) return;
+        step = Math.min(step + 1, steps.length - 1);
+        showStep(true);
+        return;
+      }
       if (!currentStepValid()) return;
-      setStatus('Sending request...');
-      if (submit instanceof HTMLButtonElement) submit.disabled = true;
+      setStatus('Sending your request...');
+      if (submit instanceof HTMLButtonElement) {
+        submit.disabled = true;
+        submit.textContent = 'Sending...';
+      }
 
       const payload = Object.fromEntries(new FormData(form).entries());
 
@@ -238,16 +285,26 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         });
         const result = await response.json().catch(() => ({}));
         if (!response.ok || !result.ok) {
-          throw new Error(result.message || 'Quote request could not be sent yet.');
+          throw new Error(result.message || 'The request could not be sent right now. Please call or text PRVN.');
         }
         form.reset();
         step = 0;
-        showStep();
+        showStep(false);
+        if (success instanceof HTMLElement) {
+          success.hidden = false;
+          success.focus({ preventScroll: true });
+        }
         setStatus('Request sent. PRVN will follow up using the contact details provided.');
       } catch (error) {
-        setStatus(error instanceof Error ? error.message : 'Quote request could not be sent yet.', true);
+        setStatus(
+          error instanceof Error ? error.message : 'The request could not be sent right now. Please call or text PRVN.',
+          true
+        );
       } finally {
-        if (submit instanceof HTMLButtonElement) submit.disabled = false;
+        if (submit instanceof HTMLButtonElement) {
+          submit.disabled = false;
+          submit.textContent = 'Send quote request';
+        }
       }
     });
 

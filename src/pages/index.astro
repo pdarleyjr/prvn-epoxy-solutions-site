@@ -1,27 +1,44 @@
 ---
 import JsonLd from '~/components/JsonLd.astro';
 import StickyMobileCTA from '~/components/StickyMobileCTA.astro';
-import { business, finishFamilies, galleryImages, processSteps } from '~/data/site';
+import {
+  business,
+  finishFamilies,
+  galleryImages,
+  processSteps,
+  proofPoints,
+  serviceAreaCoverage,
+  siteUrl,
+} from '~/data/site';
 import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
-  title: 'Premium Epoxy Floor Coatings',
+  title: 'PRVN Epoxy Solutions | Premium Epoxy Floor Coatings',
   ignoreTitleTemplate: true,
   description:
-    'PRVN Epoxy Solutions installs premium epoxy floor coatings for residential, commercial, and industrial spaces. Call, email, or text for a free estimate.',
+    'PRVN Epoxy Solutions installs premium epoxy floor coatings for residential, commercial, and industrial spaces from the Florida Keys to West Palm Beach.',
 };
 
 const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'HomeAndConstructionBusiness',
+  '@id': `${siteUrl}/#business`,
   name: business.name,
   description: business.tagline,
-  telephone: business.phoneDisplay,
+  telephone: '+19546554199',
   email: business.email,
-  url: 'https://prvn-epoxy-solutions-site.pages.dev/',
-  image: 'https://prvn-epoxy-solutions-site.pages.dev/assets/og-prvn-epoxy.jpg',
+  url: `${siteUrl}/`,
+  logo: `${siteUrl}/assets/prvn-logo.png`,
+  image: `${siteUrl}/assets/og-prvn-epoxy.jpg`,
   priceRange: '$$',
-  areaServed: 'Service area pending confirmation',
+  areaServed: serviceAreaCoverage.schema,
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+19546554199',
+    email: business.email,
+    contactType: 'sales',
+    areaServed: serviceAreaCoverage.summary,
+  },
   makesOffer: finishFamilies.map((finish) => ({
     '@type': 'Offer',
     itemOffered: {
@@ -36,9 +53,9 @@ const localBusinessSchema = {
 <Layout metadata={metadata}>
   <JsonLd data={localBusinessSchema} />
 
-  <section class="hero">
+  <section class="hero" data-section="hero">
     <div class="hero-grid shell">
-      <div class="hero-media" aria-label="PRVN epoxy floor finish preview">
+      <div class="hero-media" aria-label="PRVN epoxy floor finish preview" data-hero-media data-parallax-media>
         <picture>
           <source srcset="/assets/hero-floor-1600.avif" type="image/avif" media="(min-width: 900px)" />
           <source srcset="/assets/hero-floor-1600.webp" type="image/webp" media="(min-width: 900px)" />
@@ -48,46 +65,52 @@ const localBusinessSchema = {
             alt="Premium glossy epoxy floor finish"
             loading="eager"
             decoding="async"
+            fetchpriority="high"
+            width="1600"
+            height="686"
           />
         </picture>
       </div>
 
       <div class="hero-copy">
-        <div class="hero-title-block">
+        <div class="hero-title-block" data-reveal>
           <span class="eyebrow">New epoxy flake floors in as little as 24 hours</span>
-          <h1>Gloss, grit, and concrete armor.</h1>
+          <h1 transition:name="home-headline">Gloss, grit, and concrete armor.</h1>
         </div>
-        <div class="hero-support">
+        <div class="hero-support" data-reveal data-reveal-delay="0.08">
           <p>
             PRVN Epoxy Solutions installs premium coating systems for garages, homes, shops, showrooms, and high-use
-            commercial spaces. Call, email, or text for a free estimate.
+            commercial spaces from the Florida Keys to West Palm Beach. Call, email, or text for a free estimate.
           </p>
           <div class="hero-actions">
-            <a class="button" href="/quote">Start a free quote</a>
-            <a class="button button-secondary" href={business.phoneHref}>{business.phoneDisplay}</a>
+            <a class="button" href="/quote" data-cta="quote" data-magnetic>Start a free quote</a>
+            <a class="button button-secondary" href={business.phoneHref} data-cta="call">{business.phoneDisplay}</a>
           </div>
           <div class="hero-proof" aria-label="PRVN proof points">
-            <div class="proof-card">
-              <strong>24 hr</strong>
-              <span>Flake floor install options after prep review</span>
-            </div>
-            <div class="proof-card">
-              <strong>3 ways</strong>
-              <span>Call, text, or email for a free estimate</span>
-            </div>
-            <div class="proof-card">
-              <strong>R / C / I</strong>
-              <span>Residential, commercial, and industrial coatings</span>
-            </div>
+            {
+              proofPoints.map((point, index) => (
+                <div class="proof-card" data-reveal data-reveal-delay={0.1 + index * 0.06}>
+                  {typeof point.value === 'number' ? (
+                    <strong data-counter={point.value} data-counter-suffix={point.suffix}>
+                      {point.value}
+                      {point.suffix}
+                    </strong>
+                  ) : (
+                    <strong>{point.display}</strong>
+                  )}
+                  <span>{point.label}</span>
+                </div>
+              ))
+            }
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="styles" aria-labelledby="styles-title">
+  <section class="section section-epoxy-styles" id="styles" aria-labelledby="styles-title" data-section="epoxy-styles">
     <div class="shell">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <span class="kicker">Epoxy styles</span>
         <h2 id="styles-title">Choose the finish that fits the room.</h2>
         <p>
@@ -98,10 +121,17 @@ const localBusinessSchema = {
       <div class="styles-grid">
         {
           finishFamilies.map((finish) => (
-            <article class="service-card" id={finish.id}>
+            <article class="service-card" id={finish.id} data-tilt data-reveal>
               <picture>
                 <source srcset={finish.avif} type="image/avif" />
-                <img src={finish.image} alt={`${finish.title} floor coating sample`} loading="lazy" decoding="async" />
+                <img
+                  src={finish.image}
+                  alt={`${finish.title} floor coating sample`}
+                  loading="lazy"
+                  decoding="async"
+                  width="900"
+                  height="900"
+                />
               </picture>
               <h3>{finish.title}</h3>
               <p>{finish.description}</p>
@@ -110,6 +140,9 @@ const localBusinessSchema = {
                   <li>{point}</li>
                 ))}
               </ul>
+              <a class="card-link" href={finish.href} aria-label={`View ${finish.title} details`}>
+                View finish
+              </a>
             </article>
           ))
         }
@@ -117,9 +150,9 @@ const localBusinessSchema = {
     </div>
   </section>
 
-  <section class="section" aria-labelledby="before-after-title">
+  <section class="section" aria-labelledby="before-after-title" data-section="before-after">
     <div class="shell split-grid">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <span class="kicker">Before / after</span>
         <h2 id="before-after-title">From bare slab to showroom finish.</h2>
         <p>
@@ -127,13 +160,15 @@ const localBusinessSchema = {
           complete.
         </p>
       </div>
-      <div class="ba-slider" data-before-after style="--split: 52%;">
+      <div class="ba-slider" data-before-after data-reveal style="--split: 52%;">
         <div class="ba-after">
           <img
             src="/assets/after-job.webp"
             alt="Completed PRVN epoxy floor after coating"
             loading="lazy"
             decoding="async"
+            width="1400"
+            height="1050"
           />
         </div>
         <div class="ba-before">
@@ -142,10 +177,12 @@ const localBusinessSchema = {
             alt="Epoxy floor job in progress before completion"
             loading="lazy"
             decoding="async"
+            width="1400"
+            height="1050"
           />
         </div>
         <input class="ba-range" type="range" min="8" max="92" value="52" aria-label="Compare before and after floor" />
-        <div class="ba-handle" aria-hidden="true">&lt;&gt;</div>
+        <div class="ba-handle" aria-hidden="true"><span></span></div>
         <div class="ba-labels" aria-hidden="true">
           <span>Before</span>
           <span>After</span>
@@ -154,24 +191,24 @@ const localBusinessSchema = {
     </div>
   </section>
 
-  <section class="section" aria-labelledby="proof-title">
+  <section class="section" aria-labelledby="proof-title" data-section="proof">
     <div class="shell">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <span class="kicker">Why PRVN / why epoxy</span>
         <h2 id="proof-title">A floor that looks expensive because it works hard.</h2>
       </div>
       <div class="metrics-grid">
-        <article class="metric-card">
+        <article class="metric-card" data-reveal>
           <h3>Concrete prep first</h3>
           <p>Grinding, cleaning, repair review, and profile control help the coating bond correctly.</p>
         </article>
-        <article class="metric-card">
+        <article class="metric-card" data-reveal>
           <h3>Finish systems by use</h3>
           <p>
             Flake, quartz, metallic, solid, glitter, countertop, and logo options give each space a purpose-built look.
           </p>
         </article>
-        <article class="metric-card">
+        <article class="metric-card" data-reveal>
           <h3>Easy to maintain</h3>
           <p>A sealed epoxy system helps reduce dusting concrete, stains, and the unfinished garage feel.</p>
         </article>
@@ -179,16 +216,16 @@ const localBusinessSchema = {
     </div>
   </section>
 
-  <section class="section" id="process" aria-labelledby="process-title">
+  <section class="section" id="process" aria-labelledby="process-title" data-section="process">
     <div class="shell">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <span class="kicker">Process</span>
         <h2 id="process-title">Clear steps. Clean handoff.</h2>
       </div>
-      <div class="timeline">
+      <div class="timeline" data-process-timeline>
         {
-          processSteps.map((step) => (
-            <article>
+          processSteps.map((step, index) => (
+            <article data-reveal data-reveal-delay={index * 0.07}>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
             </article>
@@ -198,20 +235,47 @@ const localBusinessSchema = {
     </div>
   </section>
 
-  <section class="section" id="gallery" aria-labelledby="gallery-title">
+  <section class="section" id="gallery" aria-labelledby="gallery-title" data-section="gallery">
     <div class="shell">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <span class="kicker">Gallery preview</span>
         <h2 id="gallery-title">Finish ideas with depth, chip, and gloss.</h2>
         <p>Current PRVN project and concept imagery, arranged to preserve each image without cropping.</p>
       </div>
       <div class="gallery-grid">
-        {galleryImages.map((image) => <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />)}
+        {
+          galleryImages.slice(0, 5).map((image) => (
+            <button
+              class="gallery-item"
+              type="button"
+              data-gallery-item
+              data-full={image.full}
+              data-alt={image.alt}
+              data-caption={image.caption}
+              data-badge={image.badge}
+              data-categories={image.categories.join(',')}
+              data-reveal
+            >
+              <img
+                src={image.src}
+                alt={image.alt}
+                loading="lazy"
+                decoding="async"
+                width={image.width}
+                height={image.height}
+              />
+              <span>{image.badge}</span>
+            </button>
+          ))
+        }
+      </div>
+      <div class="inline-actions gallery-preview-actions" data-reveal>
+        <a class="button button-secondary" href="/gallery" data-cta="gallery">Open full gallery</a>
       </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="cta-title">
+  <section class="section" aria-labelledby="cta-title" data-section="final-cta">
     <div class="shell final-cta">
       <span class="kicker">Free estimate</span>
       <h2 id="cta-title">Ready for a floor that looks finished on purpose?</h2>
@@ -220,21 +284,11 @@ const localBusinessSchema = {
         email.
       </p>
       <div class="inline-actions">
-        <a class="button" href="/quote">Start quote wizard</a>
-        <a class="button button-secondary" href={business.emailHref}>Email PRVN</a>
+        <a class="button" href="/quote" data-cta="quote" data-magnetic>Start quote wizard</a>
+        <a class="button button-secondary" href={business.emailHref} data-cta="email">Email PRVN</a>
       </div>
     </div>
   </section>
 
   <StickyMobileCTA />
 </Layout>
-
-<script>
-  document.querySelectorAll('[data-before-after]').forEach((slider) => {
-    const input = slider.querySelector('input[type="range"]');
-    if (!(input instanceof HTMLInputElement)) return;
-    const sync = () => slider.setAttribute('style', `--split: ${input.value}%;`);
-    input.addEventListener('input', sync);
-    sync();
-  });
-</script>

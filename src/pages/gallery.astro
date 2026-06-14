@@ -1,29 +1,75 @@
 ---
-import { galleryImages } from '~/data/site';
+import { galleryFilters, galleryImages } from '~/data/site';
 import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
   title: 'Epoxy Floor Gallery',
-  description: 'Preview current PRVN Epoxy Solutions project and concept imagery for epoxy floor finishes.',
+  description:
+    'Browse PRVN Epoxy Solutions gallery images for premium epoxy floors, custom concepts, garage coatings, and metallic-style finish inspiration.',
 };
 ---
 
 <Layout metadata={metadata}>
-  <section class="page-hero">
-    <div class="shell section-heading">
+  <section class="page-hero" data-section="gallery-hero">
+    <div class="shell section-heading" data-reveal>
       <span class="kicker">Gallery</span>
       <h1>Current PRVN gallery.</h1>
       <p>
         A focused set of current project and concept images, arranged in a masonry layout so each file keeps its natural
-        shape without awkward cropping.
+        shape without awkward cropping. Project categories remain conservative until real project metadata is confirmed.
       </p>
-      <a class="button" href="/quote">Request this look</a>
+      <a class="button" href="/quote" data-cta="quote" data-magnetic>Request this look</a>
     </div>
   </section>
 
-  <section class="section">
-    <div class="shell gallery-grid">
-      {galleryImages.map((image) => <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />)}
+  <section class="section" data-section="gallery">
+    <div class="shell gallery-shell" data-gallery>
+      <div class="gallery-filters" aria-label="Gallery filters">
+        {
+          galleryFilters.map((filter) => (
+            <button
+              class="filter-button"
+              type="button"
+              data-gallery-filter={filter.id}
+              aria-pressed={filter.id === 'all' ? 'true' : 'false'}
+            >
+              {filter.label}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="gallery-grid gallery-grid-full">
+        {
+          galleryImages.map((image) => (
+            <button
+              class="gallery-item"
+              type="button"
+              data-gallery-item
+              data-full={image.full}
+              data-alt={image.alt}
+              data-caption={image.caption}
+              data-badge={image.badge}
+              data-categories={image.categories.join(',')}
+              data-reveal
+            >
+              <img
+                src={image.src}
+                alt={image.alt}
+                loading="lazy"
+                decoding="async"
+                width={image.width}
+                height={image.height}
+              />
+              <span>{image.badge}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <p class="gallery-empty" data-gallery-empty hidden>
+        No images are confirmed for this category yet. PRVN can add verified project photos as they become available.
+      </p>
     </div>
   </section>
 </Layout>

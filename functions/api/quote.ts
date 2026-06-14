@@ -83,12 +83,16 @@ const validateTurnstile = async (secret: string, token: string, request: Request
   const ip = request.headers.get('CF-Connecting-IP');
   if (ip) formData.append('remoteip', ip);
 
-  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-    method: 'POST',
-    body: formData,
-  });
-  const result = (await response.json()) as { success?: boolean };
-  return Boolean(result.success);
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: formData,
+    });
+    const result = (await response.json()) as { success?: boolean };
+    return Boolean(result.success);
+  } catch {
+    return false;
+  }
 };
 
 const buildEmail = (payload: QuotePayload) => {
@@ -173,32 +177,41 @@ export async function onRequestPost(context: PagesContext) {
     return json(
       {
         ok: false,
-        message: 'Email delivery is not configured yet. Add RESEND_API_KEY and QUOTE_FROM_EMAIL in Cloudflare Pages.',
+        message: 'Online requests are not available yet. Please call or text PRVN directly.',
       },
       { status: 503 }
     );
   }
 
   const email = buildEmail(payload);
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${apiKey}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      from,
-      to,
-      reply_to: payload.email,
-      subject: `PRVN quote request: ${payload.projectType} - ${payload.finishPreference}`,
-      html: email.html,
-      text: email.text,
-    }),
-  });
+  let response: Response;
+
+  try {
+    response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${apiKey}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        from,
+        to,
+        reply_to: payload.email,
+        subject: `PRVN quote request: ${payload.projectType} - ${payload.finishPreference}`,
+        html: email.html,
+        text: email.text,
+      }),
+    });
+  } catch {
+    return json(
+      { ok: false, message: 'The request could not be sent right now. Please call or text PRVN.' },
+      { status: 502 }
+    );
+  }
 
   if (!response.ok) {
     return json(
-      { ok: false, message: 'Email provider rejected the request. Check Resend sender/domain settings.' },
+      { ok: false, message: 'The request could not be sent right now. Please call or text PRVN.' },
       { status: 502 }
     );
   }

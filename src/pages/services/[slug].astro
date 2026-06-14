@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import JsonLd from '~/components/JsonLd.astro';
-import { business } from '~/data/site';
+import { business, serviceAreaCoverage, siteUrl } from '~/data/site';
 import Layout from '~/layouts/PageLayout.astro';
 
 export async function getStaticPaths() {
@@ -20,30 +20,47 @@ const metadata = {
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Service',
+  '@id': `${siteUrl}/services/${entry.id.replace(/\.(md|mdx)$/i, '')}#service`,
   name: entry.data.title,
   description: entry.data.description,
   provider: {
     '@type': 'HomeAndConstructionBusiness',
+    '@id': `${siteUrl}/#business`,
     name: business.name,
-    telephone: business.phoneDisplay,
+    telephone: '+19546554199',
     email: business.email,
   },
   serviceType: entry.data.finishType,
-  areaServed: 'Service area pending confirmation',
+  areaServed: serviceAreaCoverage.schema,
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+    { '@type': 'ListItem', position: 2, name: 'Services', item: `${siteUrl}/services` },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: entry.data.title,
+      item: `${siteUrl}/services/${entry.id.replace(/\.(md|mdx)$/i, '')}`,
+    },
+  ],
 };
 ---
 
 <Layout metadata={metadata}>
-  <JsonLd data={schema} />
+  <JsonLd data={[schema, breadcrumbSchema]} />
 
-  <section class="page-hero">
+  <section class="page-hero" data-section="service-detail">
     <div class="shell split-grid">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <span class="kicker">{entry.data.finishType}</span>
         <h1>{entry.data.title}</h1>
         <p>{entry.data.description}</p>
         <div class="inline-actions">
-          <a class="button" href="/quote">Quote this finish</a>
+          <a class="button" href="/quote" data-cta="quote" data-magnetic>Quote this finish</a>
           <a class="button button-secondary" href="/services">All services</a>
         </div>
       </div>
@@ -55,6 +72,9 @@ const schema = {
             alt={`${entry.data.title} finish preview`}
             loading="eager"
             decoding="async"
+            width="900"
+            height="900"
+            data-reveal
           />
         )
       }
@@ -63,13 +83,13 @@ const schema = {
 
   <section class="section">
     <div class="shell split-grid">
-      <article class="card">
+      <article class="card" data-reveal>
         <h2>What to expect</h2>
         <div class="prose prose-invert max-w-none">
           <Content />
         </div>
       </article>
-      <article class="card">
+      <article class="card" data-reveal>
         <h2>Quote details that help</h2>
         <ul class="check-list">
           <li>Square footage and photos of the current slab</li>

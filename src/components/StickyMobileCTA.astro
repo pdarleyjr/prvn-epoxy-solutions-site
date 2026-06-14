@@ -3,6 +3,7 @@ import { business } from '~/data/site';
 ---
 
 <div class="sticky-mobile-cta" aria-label="Mobile quick actions">
-  <a class="button button-secondary" href={business.phoneHref}>Call</a>
-  <a class="button" href="/quote">Free quote</a>
+  <a class="button button-secondary" href={business.phoneHref} data-cta="call">Call</a>
+  <a class="button button-secondary" href={business.smsHref} data-cta="text">Text</a>
+  <a class="button" href="/quote" data-cta="quote">Quote</a>
 </div>
