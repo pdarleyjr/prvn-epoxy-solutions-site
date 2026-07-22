@@ -1,11 +1,11 @@
 ---
-import { processSteps } from '~/data/site';
+import { processSteps, business } from '~/data/site';
 import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
   title: 'Epoxy Floor Installation Process',
   description:
-    'See the PRVN Epoxy Solutions process from estimate and concrete prep through coating, topcoat, cure, and handoff.',
+    'See the PRVN Epoxy Solutions process from inspection and concrete prep through coating, protection, and final walkthrough.',
 };
 ---
 
@@ -39,7 +39,10 @@ const metadata = {
       <span class="kicker">Free estimate</span>
       <h2>Send photos before you schedule.</h2>
       <p class="lede">Photos help identify cracks, coatings, stains, joints, and prep conditions before pricing.</p>
-      <a class="button" href="/quote" data-cta="quote" data-magnetic>Start quote wizard</a>
+      <div class="inline-actions">
+        <a class="button" href="/quote" data-cta="quote" data-magnetic>Start quote wizard</a>
+        <a class="button button-secondary" href={business.phoneHref} data-cta="call">Call PRVN</a>
+      </div>
     </div>
   </section>
 </Layout>

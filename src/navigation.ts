@@ -2,23 +2,23 @@ import { getPermalink } from './utils/permalinks';
 
 export const headerData = {
   links: [
-    { text: 'Services', href: getPermalink('/services') },
+    { text: 'Floor Systems', href: getPermalink('/services') },
     { text: 'Gallery', href: getPermalink('/gallery') },
     { text: 'Process', href: getPermalink('/process') },
     { text: 'About', href: getPermalink('/about') },
     { text: 'Contact', href: getPermalink('/contact') },
   ],
-  actions: [{ text: 'Free quote', href: getPermalink('/quote') }],
+  actions: [{ text: 'Get Quote', href: getPermalink('/quote') }],
 };
 
 export const footerData = {
   links: [
     {
-      title: 'Services',
+      title: 'Floor Systems',
       links: [
-        { text: 'Flake epoxy', href: getPermalink('/services/flake-epoxy') },
-        { text: 'Quartz epoxy', href: getPermalink('/services/quartz-epoxy') },
-        { text: 'Metallic epoxy', href: getPermalink('/services/metallic-epoxy') },
+        { text: 'Flake System', href: getPermalink('/services/flake-epoxy') },
+        { text: 'Quartz System', href: getPermalink('/services/quartz-epoxy') },
+        { text: 'Metallic System', href: getPermalink('/services/metallic-epoxy') },
         { text: 'Countertops', href: getPermalink('/services/epoxy-countertops') },
       ],
     },

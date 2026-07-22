@@ -37,30 +37,39 @@ export const serviceAreaCoverage = {
 export const finishFamilies = [
   {
     id: 'flake',
-    title: 'Flake epoxy',
+    title: 'PRVN Flake System',
+    shortTitle: 'Flake',
     href: '/services/flake-epoxy',
     description: 'A durable, textured system for garages, shops, utility areas, and high-traffic spaces.',
+    bestUses: 'Garages, shops, utility rooms, laundry areas',
     image: '/assets/style-flake.webp',
     avif: '/assets/style-flake.avif',
     points: ['Slip-conscious texture', '24-hour install options', 'Wide chip blends'],
+    qualities: ['Heavy-duty traction', 'Chip broadcast coverage', 'UV-stable topcoat'],
   },
   {
     id: 'quartz',
-    title: 'Quartz epoxy',
+    title: 'PRVN Quartz System',
+    shortTitle: 'Quartz',
     href: '/services/quartz-epoxy',
     description: 'A denser aggregate look with serious grip, polished depth, and commercial-grade toughness.',
+    bestUses: 'Commercial entries, kitchens, restrooms, work areas',
     image: '/assets/style-quartz.webp',
     avif: '/assets/style-quartz.avif',
     points: ['Heavy-duty traction', 'Multi-color broadcast', 'Cleanable surface'],
+    qualities: ['Commercial-grade toughness', 'Polished depth', 'Extra texture underfoot'],
   },
   {
     id: 'metallic',
-    title: 'Metallic epoxy',
+    title: 'PRVN Metallic System',
+    shortTitle: 'Metallic',
     href: '/services/metallic-epoxy',
     description: 'A fluid, high-gloss statement floor with marble-like movement and a custom finish.',
+    bestUses: 'Showrooms, interiors, salons, retail, feature rooms',
     image: '/assets/style-metallic.webp',
     avif: '/assets/style-metallic.avif',
     points: ['Luxury visual depth', 'Custom color movement', 'Showroom finish'],
+    qualities: ['High-gloss surface', 'Marble-like movement', 'One-of-one result'],
   },
 ];
 
@@ -108,20 +117,34 @@ export const services = [
 
 export const processSteps = [
   {
-    title: 'Estimate',
-    text: 'PRVN reviews the space, finish goal, condition, timeline, and any moisture or repair concerns.',
+    number: '01',
+    title: 'Inspect',
+    text: 'PRVN reviews the space, finish goal, slab condition, moisture concerns, and timeline.',
   },
   {
-    title: 'Prep',
-    text: 'The slab is cleaned, mechanically profiled, repaired where needed, and staged for coating.',
+    number: '02',
+    title: 'Prepare',
+    text: 'The slab is mechanically profiled, cleaned, and staged for coating with proper surface preparation.',
   },
   {
+    number: '03',
+    title: 'Repair',
+    text: 'Cracks, spalling, and surface damage are addressed before any coating is applied.',
+  },
+  {
+    number: '04',
     title: 'Coat',
     text: 'Base coat, broadcast or metallic finish, and protective topcoat are installed to match the selected system.',
   },
   {
-    title: 'Cure',
-    text: 'You receive cure guidance, care instructions, and next steps for returning the space to use.',
+    number: '05',
+    title: 'Protect',
+    text: 'Topcoat and cure protection are applied for long-term durability, gloss retention, and chemical resistance.',
+  },
+  {
+    number: '06',
+    title: 'Walkthrough',
+    text: 'Final inspection, care instructions, and next steps for returning the space to use.',
   },
 ];
 
@@ -139,6 +162,21 @@ export const proofPoints = [
   {
     display: 'R / C / I',
     label: 'Residential, commercial, and industrial coatings',
+  },
+];
+
+export const benefitCards = [
+  {
+    title: 'Professional preparation',
+    description: 'Mechanical profiling, crack repair, and moisture review before any coating goes down.',
+  },
+  {
+    title: 'Purpose-built coating systems',
+    description: 'Flake, quartz, metallic, solid, and custom options matched to how the space gets used.',
+  },
+  {
+    title: 'Clean finished results',
+    description: 'Controlled application, sealed edges, and a final walkthrough to confirm the finish.',
   },
 ];
 
@@ -229,3 +267,75 @@ export const faqs = [
       'Square footage, photos, slab condition, project address, finish preference, timeline, and how the space is used help PRVN prepare a better estimate.',
   },
 ];
+
+export const configuratorSpaces = [
+  { id: 'garage', label: 'Garage' },
+  { id: 'patio', label: 'Patio' },
+  { id: 'commercial', label: 'Commercial' },
+  { id: 'interior', label: 'Interior' },
+  { id: 'countertop', label: 'Countertop' },
+];
+
+export const configuratorFinishes = [
+  { id: 'flake', label: 'Flake' },
+  { id: 'quartz', label: 'Quartz' },
+  { id: 'metallic', label: 'Metallic' },
+];
+
+export const configuratorStyles = [
+  { id: 'clean', label: 'Clean' },
+  { id: 'industrial', label: 'Industrial' },
+  { id: 'luxury', label: 'Luxury' },
+  { id: 'bold', label: 'Bold' },
+  { id: 'blue-accent', label: 'Blue Accent' },
+  { id: 'neutral', label: 'Neutral' },
+];
+
+export const configuratorRecommendations: Record<
+  string,
+  { system: string; image: string; description: string; uses: string }
+> = {
+  'garage-flake-clean': {
+    system: 'PRVN Flake System',
+    image: '/assets/style-flake.webp',
+    description: 'Clean chip broadcast with a neutral palette for a sharp, organized garage.',
+    uses: 'Daily parking, storage, workshop areas',
+  },
+  'garage-flake-industrial': {
+    system: 'PRVN Flake System',
+    image: '/assets/style-flake.webp',
+    description: 'Heavy-duty flake system with extra texture for tools, vehicles, and work traffic.',
+    uses: 'Workshops, utility garages, mechanic bays',
+  },
+  'garage-flake-bold': {
+    system: 'PRVN Flake System',
+    image: '/assets/style-flake.webp',
+    description: 'High-contrast flake blend with bold color choices for a statement garage floor.',
+    uses: 'Show garages, car collections, feature spaces',
+  },
+  'commercial-quartz-clean': {
+    system: 'PRVN Quartz System',
+    image: '/assets/style-quartz.webp',
+    description: 'Refined quartz aggregate with a clean, professional look for commercial traffic.',
+    uses: 'Lobbies, restrooms, entries, retail floors',
+  },
+  'interior-metallic-luxury': {
+    system: 'PRVN Metallic System',
+    image: '/assets/style-metallic.webp',
+    description: 'High-gloss metallic with marble-like movement for a luxury interior statement.',
+    uses: 'Living areas, showrooms, salons, studios',
+  },
+  'countertop-metallic-luxury': {
+    system: 'PRVN Metallic System',
+    image: '/assets/style-metallic.webp',
+    description: 'Marble-inspired metallic movement on countertops for a custom surface upgrade.',
+    uses: 'Kitchen counters, bar tops, vanities',
+  },
+};
+
+export const defaultRecommendation = {
+  system: 'PRVN Flake System',
+  image: '/assets/style-flake.webp',
+  description: 'Select your space, finish, and style above to see a personalized recommendation.',
+  uses: 'Garages, shops, utility areas',
+};

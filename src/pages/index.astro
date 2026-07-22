@@ -1,8 +1,12 @@
 ---
 import JsonLd from '~/components/JsonLd.astro';
-import StickyMobileCTA from '~/components/StickyMobileCTA.astro';
 import {
+  benefitCards,
   business,
+  configuratorFinishes,
+  configuratorSpaces,
+  configuratorStyles,
+  defaultRecommendation,
   finishFamilies,
   galleryImages,
   processSteps,
@@ -55,7 +59,7 @@ const localBusinessSchema = {
 
   <section class="hero" data-section="hero">
     <div class="hero-grid shell">
-      <div class="hero-media" aria-label="PRVN epoxy floor finish preview" data-hero-media data-parallax-media>
+      <div class="hero-media" aria-label="PRVN epoxy floor finish preview" data-hero-media>
         <picture>
           <source srcset="/assets/hero-floor-1600.avif" type="image/avif" media="(min-width: 900px)" />
           <source srcset="/assets/hero-floor-1600.webp" type="image/webp" media="(min-width: 900px)" />
@@ -74,16 +78,16 @@ const localBusinessSchema = {
 
       <div class="hero-copy">
         <div class="hero-title-block" data-reveal>
-          <span class="eyebrow">New epoxy flake floors in as little as 24 hours</span>
+          <span class="eyebrow">Premium epoxy coating systems</span>
           <h1 transition:name="home-headline">Gloss, grit, and concrete armor.</h1>
         </div>
         <div class="hero-support" data-reveal data-reveal-delay="0.08">
           <p>
-            PRVN Epoxy Solutions installs premium coating systems for garages, homes, shops, showrooms, and high-use
-            commercial spaces from the Florida Keys to West Palm Beach. Call, email, or text for a free estimate.
+            PRVN installs premium coating systems for garages, homes, shops, showrooms, and commercial spaces from the
+            Florida Keys to West Palm Beach.
           </p>
           <div class="hero-actions">
-            <a class="button" href="/quote" data-cta="quote" data-magnetic>Start a free quote</a>
+            <a class="button" href="/quote" data-cta="quote" data-magnetic>Get a free quote</a>
             <a class="button button-secondary" href={business.phoneHref} data-cta="call">{business.phoneDisplay}</a>
           </div>
           <div class="hero-proof" aria-label="PRVN proof points">
@@ -108,57 +112,62 @@ const localBusinessSchema = {
     </div>
   </section>
 
-  <section class="section section-epoxy-styles" id="styles" aria-labelledby="styles-title" data-section="epoxy-styles">
+  <section class="section section-systems" id="systems" aria-labelledby="systems-title" data-section="systems">
     <div class="shell">
       <div class="section-heading" data-reveal>
-        <span class="kicker">Epoxy styles</span>
-        <h2 id="styles-title">Choose the finish that fits the room.</h2>
+        <span class="kicker">Floor Systems</span>
+        <h2 id="systems-title">Engineered coating systems.</h2>
         <p>
-          Every system starts with concrete prep and ends with a finish selected for traction, gloss, maintenance, and
+          Each system starts with concrete prep and ends with a finish selected for traction, gloss, maintenance, and
           the way the space gets used.
         </p>
       </div>
-      <div class="styles-grid">
-        {
-          finishFamilies.map((finish) => (
-            <article class="service-card" id={finish.id} data-tilt data-reveal>
-              <picture>
-                <source srcset={finish.avif} type="image/avif" />
-                <img
-                  src={finish.image}
-                  alt={`${finish.title} floor coating sample`}
-                  loading="lazy"
-                  decoding="async"
-                  width="900"
-                  height="900"
-                />
-              </picture>
-              <h3>{finish.title}</h3>
-              <p>{finish.description}</p>
-              <ul>
-                {finish.points.map((point) => (
-                  <li>{point}</li>
-                ))}
-              </ul>
-              <a class="card-link" href={finish.href} aria-label={`View ${finish.title} details`}>
-                View finish
-              </a>
-            </article>
-          ))
-        }
-      </div>
+    </div>
+    <div class="finish-scroll" data-finish-scroll>
+      {
+        finishFamilies.map((finish, index) => (
+          <article class="finish-card" id={finish.id} data-reveal data-reveal-delay={index * 0.06}>
+            <picture>
+              <source srcset={finish.avif} type="image/avif" />
+              <img
+                src={finish.image}
+                alt={`${finish.title} floor coating sample`}
+                loading="lazy"
+                decoding="async"
+                width="900"
+                height="900"
+              />
+            </picture>
+            <span class="kicker">{finish.bestUses}</span>
+            <h3>{finish.title}</h3>
+            <p>{finish.description}</p>
+            <ul>
+              {finish.qualities.map((quality) => (
+                <li>{quality}</li>
+              ))}
+            </ul>
+            <div class="finish-card-actions">
+              <a class="button button-secondary button-small" href={finish.href}>View System</a>
+              <a class="button button-small" href={`/quote?finish=${finish.id}`}>Start Quote</a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+    <div class="finish-dots" data-finish-dots aria-hidden="true">
+      {finishFamilies.map((_, index) => <span class:list={[index === 0 ? 'is-active' : '']} />)}
     </div>
   </section>
 
   <section class="section" aria-labelledby="before-after-title" data-section="before-after">
     <div class="shell split-grid">
       <div class="section-heading" data-reveal>
-        <span class="kicker">Before / after</span>
+        <span class="kicker">Before / After</span>
         <h2 id="before-after-title">From bare slab to showroom finish.</h2>
         <p>
-          Drag the slider to compare a real job in progress with the finished PRVN epoxy coating after the floor is
-          complete.
+          Drag the slider to compare a real project before and after the PRVN epoxy coating is complete.
         </p>
+        <a class="button button-secondary" href="/gallery" data-cta="gallery">View Projects</a>
       </div>
       <div class="ba-slider" data-before-after data-reveal style="--split: 52%;">
         <div class="ba-after">
@@ -191,27 +200,21 @@ const localBusinessSchema = {
     </div>
   </section>
 
-  <section class="section" aria-labelledby="proof-title" data-section="proof">
+  <section class="section" aria-labelledby="benefits-title" data-section="benefits">
     <div class="shell">
       <div class="section-heading" data-reveal>
-        <span class="kicker">Why PRVN / why epoxy</span>
-        <h2 id="proof-title">A floor that looks expensive because it works hard.</h2>
+        <span class="kicker">Why PRVN</span>
+        <h2 id="benefits-title">A floor that looks expensive because it works hard.</h2>
       </div>
       <div class="metrics-grid">
-        <article class="metric-card" data-reveal>
-          <h3>Concrete prep first</h3>
-          <p>Grinding, cleaning, repair review, and profile control help the coating bond correctly.</p>
-        </article>
-        <article class="metric-card" data-reveal>
-          <h3>Finish systems by use</h3>
-          <p>
-            Flake, quartz, metallic, solid, glitter, countertop, and logo options give each space a purpose-built look.
-          </p>
-        </article>
-        <article class="metric-card" data-reveal>
-          <h3>Easy to maintain</h3>
-          <p>A sealed epoxy system helps reduce dusting concrete, stains, and the unfinished garage feel.</p>
-        </article>
+        {
+          benefitCards.map((card, index) => (
+            <article class="metric-card" data-reveal data-reveal-delay={index * 0.06}>
+              <h3>{card.title}</h3>
+              <p>{card.description}</p>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -238,7 +241,7 @@ const localBusinessSchema = {
   <section class="section" id="gallery" aria-labelledby="gallery-title" data-section="gallery">
     <div class="shell">
       <div class="section-heading" data-reveal>
-        <span class="kicker">Gallery preview</span>
+        <span class="kicker">Gallery</span>
         <h2 id="gallery-title">Finish ideas with depth, chip, and gloss.</h2>
         <p>Current PRVN finish imagery for Flakes, Quartz, Metallic, Solid, and Carbon Fiber epoxy looks.</p>
       </div>
@@ -270,7 +273,99 @@ const localBusinessSchema = {
         }
       </div>
       <div class="inline-actions gallery-preview-actions" data-reveal>
-        <a class="button button-secondary" href="/gallery" data-cta="gallery">Open full gallery</a>
+        <a class="button button-secondary" href="/gallery" data-cta="gallery">View Full Gallery</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="find-finish" aria-labelledby="find-finish-title" data-section="find-finish">
+    <div class="shell">
+      <div class="section-heading" data-reveal>
+        <span class="kicker">Configurator</span>
+        <h2 id="find-finish-title">Find Your Finish.</h2>
+        <p>Select your space, finish type, and style direction to see a recommended PRVN system.</p>
+      </div>
+      <div class="find-finish" data-find-finish data-reveal>
+        <div class="find-finish-grid">
+          <div class="find-finish-selectors">
+            <div class="selector-group" data-selector-group="space">
+              <h3>Space</h3>
+              <div class="selector-options">
+                {
+                  configuratorSpaces.map((option, index) => (
+                    <button
+                      class="selector-button"
+                      type="button"
+                      data-selector="space"
+                      data-value={option.id}
+                      aria-pressed={index === 0 ? 'true' : 'false'}
+                      class:list={[index === 0 ? 'is-selected' : '']}
+                    >
+                      {option.label}
+                    </button>
+                  ))
+                }
+              </div>
+            </div>
+            <div class="selector-group" data-selector-group="finish">
+              <h3>Finish</h3>
+              <div class="selector-options">
+                {
+                  configuratorFinishes.map((option, index) => (
+                    <button
+                      class="selector-button"
+                      type="button"
+                      data-selector="finish"
+                      data-value={option.id}
+                      aria-pressed={index === 0 ? 'true' : 'false'}
+                      class:list={[index === 0 ? 'is-selected' : '']}
+                    >
+                      {option.label}
+                    </button>
+                  ))
+                }
+              </div>
+            </div>
+            <div class="selector-group" data-selector-group="style">
+              <h3>Style</h3>
+              <div class="selector-options">
+                {
+                  configuratorStyles.map((option, index) => (
+                    <button
+                      class="selector-button"
+                      type="button"
+                      data-selector="style"
+                      data-value={option.id}
+                      aria-pressed={index === 0 ? 'true' : 'false'}
+                      class:list={[index === 0 ? 'is-selected' : '']}
+                    >
+                      {option.label}
+                    </button>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+          <div class="find-finish-result" data-finish-result>
+            <img
+              src={defaultRecommendation.image}
+              alt="Recommended finish preview"
+              data-result-image
+              loading="lazy"
+              decoding="async"
+              width="600"
+              height="400"
+            />
+            <h3 data-result-system>{defaultRecommendation.system}</h3>
+            <p data-result-description>{defaultRecommendation.description}</p>
+            <p>
+              <strong>Ideal for:</strong>
+              {' '}
+              <span data-result-uses>{defaultRecommendation.uses}</span>
+            </p>
+            <a class="button" href="/quote" data-result-quote>Start Quote With This Finish</a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -278,17 +373,13 @@ const localBusinessSchema = {
   <section class="section" aria-labelledby="cta-title" data-section="final-cta">
     <div class="shell final-cta">
       <span class="kicker">Free estimate</span>
-      <h2 id="cta-title">Ready for a floor that looks finished on purpose?</h2>
-      <p class="lede">
-        Share your finish preference, photos, square footage, and timeline. PRVN will follow up by phone, text, or
-        email.
-      </p>
+      <h2 id="cta-title">Ready to transform your space?</h2>
+      <p class="lede">Start a free project estimate. Share your finish preference, photos, square footage, and timeline.</p>
       <div class="inline-actions">
-        <a class="button" href="/quote" data-cta="quote" data-magnetic>Start quote wizard</a>
-        <a class="button button-secondary" href={business.emailHref} data-cta="email">Email PRVN</a>
+        <a class="button" href="/quote" data-cta="quote" data-magnetic>Start Quote</a>
+        <a class="button button-secondary" href={business.phoneHref} data-cta="call">Call PRVN</a>
+        <a class="button button-secondary" href={business.smsHref} data-cta="text">Text PRVN</a>
       </div>
     </div>
   </section>
-
-  <StickyMobileCTA />
 </Layout>

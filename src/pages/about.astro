@@ -14,7 +14,7 @@ const metadata = {
     <div class="shell split-grid">
       <div class="section-heading" data-reveal>
         <span class="kicker">About PRVN</span>
-        <h1>Luxury epoxy floors with contractor-grade discipline.</h1>
+        <h1>Premium coating systems with contractor-grade discipline.</h1>
         <p>
           PRVN Epoxy Solutions focuses on decorative concrete coating systems that make garages, shops, showrooms,
           counters, and work spaces feel finished, resilient, and easy to maintain across {serviceAreaCoverage.summary}.
@@ -58,7 +58,7 @@ const metadata = {
   <section class="section">
     <div class="shell">
       <div class="section-heading" data-reveal>
-        <span class="kicker">Finish families</span>
+        <span class="kicker">Floor Systems</span>
         <h2>Flake, quartz, metallic, and custom detail systems.</h2>
       </div>
       <div class="styles-grid">
@@ -68,6 +68,11 @@ const metadata = {
               <img src={finish.image} alt={`${finish.title} finish sample`} loading="lazy" decoding="async" />
               <h3>{finish.title}</h3>
               <p>{finish.description}</p>
+              <ul>
+                {finish.qualities.map((quality) => (
+                  <li>{quality}</li>
+                ))}
+              </ul>
             </article>
           ))
         }
