@@ -13,7 +13,8 @@ type QuotePayload = {
   email: string;
   location: string;
   timeline?: string;
-  message: string;
+  message?: string;
+  finishStyle?: string;
   photoLinks?: string;
   companyWebsite?: string;
   'cf-turnstile-response'?: string;
@@ -57,7 +58,6 @@ const requiredFields: Array<keyof QuotePayload> = [
   'phone',
   'email',
   'location',
-  'message',
 ];
 
 const normalizePayload = (raw: Record<string, unknown>): QuotePayload => ({
@@ -71,6 +71,7 @@ const normalizePayload = (raw: Record<string, unknown>): QuotePayload => ({
   location: clean(raw.location, 180),
   timeline: clean(raw.timeline, 120),
   message: clean(raw.message, 1600),
+  finishStyle: clean(raw.finishStyle, 80),
   photoLinks: clean(raw.photoLinks, 600),
   companyWebsite: clean(raw.companyWebsite, 200),
   'cf-turnstile-response': clean(raw['cf-turnstile-response'], 2000),
@@ -103,11 +104,12 @@ const buildEmail = (payload: QuotePayload) => {
     ['Location', payload.location],
     ['Project type', payload.projectType],
     ['Finish preference', payload.finishPreference],
+    ['Finish style', payload.finishStyle || 'Not provided'],
     ['Approx. square feet', payload.squareFeet || 'Not provided'],
     ['Surface condition', payload.surfaceCondition || 'Not provided'],
     ['Timeline', payload.timeline || 'Not provided'],
     ['Photo links', payload.photoLinks || 'Not provided'],
-    ['Message', payload.message],
+    ['Message', payload.message || 'Not provided'],
   ];
 
   const text = rows.map(([label, value]) => `${label}: ${value}`).join('\n');
@@ -162,9 +164,18 @@ export async function onRequestPost(context: PagesContext) {
     return json({ ok: false, message: 'Enter a valid email address.' }, { status: 400 });
   }
 
-  if (context.env.TURNSTILE_SECRET_KEY) {
+  const turnstileSiteKey = context.env.PUBLIC_TURNSTILE_SITE_KEY;
+  const turnstileSecret = context.env.TURNSTILE_SECRET_KEY;
+  if (Boolean(turnstileSiteKey) !== Boolean(turnstileSecret)) {
+    return json(
+      { ok: false, message: 'Online requests are not available yet. Please call or text PRVN directly.' },
+      { status: 503 }
+    );
+  }
+
+  if (turnstileSecret) {
     const token = payload['cf-turnstile-response'];
-    if (!token || !(await validateTurnstile(context.env.TURNSTILE_SECRET_KEY, token, context.request))) {
+    if (!token || !(await validateTurnstile(turnstileSecret, token, context.request))) {
       return json({ ok: false, message: 'Security check failed. Refresh and try again.' }, { status: 400 });
     }
   }

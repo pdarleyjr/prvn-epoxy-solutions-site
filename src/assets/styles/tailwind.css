@@ -58,7 +58,6 @@ body {
   color: var(--ink);
   font-family: var(--aw-font-sans), ui-sans-serif, system-ui, sans-serif;
   letter-spacing: -0.02em;
-  padding-top: env(safe-area-inset-top);
 }
 
 body::before {
@@ -136,6 +135,7 @@ main {
   border-bottom: 1px solid rgba(199, 206, 217, 0.08);
   background: rgba(5, 7, 10, 0.82);
   backdrop-filter: blur(18px) saturate(140%);
+  padding-top: env(safe-area-inset-top);
   transition:
     background 220ms var(--ease-prvn, ease),
     border-color 220ms var(--ease-prvn, ease),
@@ -915,7 +915,7 @@ main {
   opacity: 0;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 960px) {
   .nav-shell {
     grid-template-columns: auto 1fr auto;
   }
@@ -966,7 +966,7 @@ main {
   }
 
   .timeline {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
   .review-hold {
@@ -1694,15 +1694,21 @@ body::after {
   position: fixed;
   inset: 0;
   z-index: 200;
-  display: none;
+  display: block;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 220ms var(--ease-prvn),
+    visibility 0s linear 220ms;
 }
 
 .mobile-drawer.is-open {
   display: block;
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 
 .mobile-drawer-backdrop {
@@ -1794,7 +1800,7 @@ body::after {
   bottom: max(0.85rem, env(safe-area-inset-bottom));
   left: 0.85rem;
   z-index: 60;
-  display: none;
+  display: grid;
   grid-template-columns: 1fr 1fr 1.4fr;
   gap: 0.5rem;
   border: 1px solid rgba(95, 145, 255, 0.32);
@@ -1861,6 +1867,10 @@ body::after {
   height: 20px;
 }
 
+.conversion-dock.is-keyboard-open {
+  display: none;
+}
+
 .finish-scroll {
   display: flex;
   gap: 1rem;
@@ -1869,7 +1879,8 @@ body::after {
   scroll-padding: 1rem;
   -webkit-overflow-scrolling: touch;
   padding: 1rem;
-  margin: 0 -1rem;
+  width: min(calc(100% - 2rem), 480px);
+  margin-inline: auto;
 }
 
 .finish-scroll::-webkit-scrollbar {
@@ -1893,7 +1904,8 @@ body::after {
   height: 240px;
   border-radius: 18px;
   background: #030405;
-  object-fit: cover;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.025);
   margin-bottom: 1rem;
 }
 
@@ -2196,7 +2208,7 @@ body::after {
   margin: 0 0 1rem;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 960px) {
   .mobile-drawer {
     display: none !important;
   }
@@ -2206,6 +2218,7 @@ body::after {
   }
 
   .finish-scroll {
+    width: var(--shell-wide);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;

@@ -6,7 +6,7 @@ on:
       - main
   push:
     branches:
-      - main
+      - '**'
   workflow_dispatch:
 
 jobs:
@@ -22,6 +22,18 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
+      - run: npm run test:unit
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium webkit
+      - name: Run browser smoke tests
+        run: npm run test:e2e
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          if-no-files-found: ignore
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -34,25 +46,51 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
-      - name: Skip deploy until secrets exist
-        if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == ''
-        run: echo "Cloudflare deploy skipped. Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets to enable GitHub-driven deploys."
+      - name: Require Cloudflare deployment credentials
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is required for production deployment."; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is required for production deployment."; exit 1; }
       - uses: actions/checkout@v4
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
       - name: Use Node.js 22
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
       - run: npm run build
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
       - name: Deploy to Cloudflare Pages
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name prvn-epoxy-solutions-site --branch main
+
+  preview:
+    if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Require Cloudflare deployment credentials
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is required for preview deployment."; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is required for preview deployment."; exit 1; }
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Deploy preview to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name prvn-epoxy-solutions-site --branch ${{ github.ref_name }}

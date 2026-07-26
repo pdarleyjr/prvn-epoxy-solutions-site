@@ -17,8 +17,8 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       <span class="kicker">Free quote</span>
       <h1>Tell PRVN what the concrete needs to become.</h1>
       <p>
-        Walk through a few quick steps to share your project details. If the web form is unavailable,
-        call or text PRVN directly.
+        Walk through a few quick steps to share your project details. If the web form is unavailable, call or text PRVN
+        directly.
       </p>
     </div>
   </section>
@@ -41,9 +41,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
               <li>Preferred flake, quartz, metallic, solid, or custom finish</li>
             </ul>
             <div class="inline-actions">
-              <a class="button button-secondary" href={business.phoneHref} data-cta="call">
-                Call {business.phoneDisplay}
-              </a>
+              <a class="button button-secondary" href={business.phoneHref} data-cta="call"
+                >Call {business.phoneDisplay}</a
+              >
               <a class="button button-secondary" href={business.smsHref} data-cta="text">Text PRVN</a>
             </div>
           </div>
@@ -52,16 +52,12 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         <form class="quote-panel quote-wizard" id="quote-form" data-quote-form novalidate data-reveal>
           <p class="step-status" data-step-status aria-live="polite">Step 1 of 8: Space type</p>
           <div class="wizard-progress" role="list" aria-label="Quote progress">
-            <span class="is-active" data-step-dot="0"></span>
-            <span data-step-dot="1"></span>
-            <span data-step-dot="2"></span>
-            <span data-step-dot="3"></span>
-            <span data-step-dot="4"></span>
-            <span data-step-dot="5"></span>
-            <span data-step-dot="6"></span>
-            <span data-step-dot="7"></span>
+            {
+              Array.from({ length: 8 }).map((_, index) => (
+                <span class:list={[index === 0 ? 'is-active' : '']} data-step-dot={index} />
+              ))
+            }
           </div>
-
           <input
             class="honeypot"
             type="text"
@@ -71,50 +67,61 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             aria-hidden="true"
             aria-label="Leave this field blank"
           />
+          <input type="hidden" name="finishStyle" data-finish-style />
 
           <div class="wizard-step is-active" data-step="0">
-            <h2>What space are you coating?</h2>
-            <p>Select the type of project.</p>
+            <h2>What space are you coating?</h2><p>Select the type of project.</p>
             <div class="option-grid">
-              {['Residential garage', 'Residential interior', 'Commercial space', 'Industrial / heavy-use', 'Countertops', 'Other'].map((option) => (
-                <label class="option-card" data-option-card>
-                  <input type="radio" name="projectType" value={option} required />
-                  {option}
-                </label>
-              ))}
+              {
+                [
+                  'Residential garage',
+                  'Residential interior',
+                  'Commercial space',
+                  'Industrial / heavy-use',
+                  'Countertops',
+                  'Other',
+                ].map((option) => (
+                  <label class="option-card" data-option-card>
+                    <input type="radio" name="projectType" value={option} required />
+                    {option}
+                  </label>
+                ))
+              }
             </div>
           </div>
 
-          <div class="wizard-step" data-step="1">
-            <h2>Which finish interests you?</h2>
-            <p>Select a coating system or choose "Not sure yet."</p>
+          <div class="wizard-step" data-step="1" hidden inert>
+            <h2>Which finish interests you?</h2><p>Select a coating system or choose "Not sure yet."</p>
             <div class="option-grid">
-              {finishFamilies.map((finish) => (
-                <label class="option-card" data-option-card>
-                  <input type="radio" name="finishPreference" value={finish.title} required />
-                  {finish.shortTitle}
-                </label>
-              ))}
-              {services.slice(3).map((service) => (
-                <label class="option-card" data-option-card>
-                  <input type="radio" name="finishPreference" value={service.title} required />
-                  {service.title}
-                </label>
-              ))}
-              <label class="option-card" data-option-card>
-                <input type="radio" name="finishPreference" value="Not sure yet" required />
-                Not sure yet
-              </label>
+              {
+                finishFamilies.map((finish) => (
+                  <label class="option-card" data-option-card>
+                    <input type="radio" name="finishPreference" value={finish.title} required />
+                    {finish.shortTitle}
+                  </label>
+                ))
+              }
+              {
+                services.slice(3).map((service) => (
+                  <label class="option-card" data-option-card>
+                    <input type="radio" name="finishPreference" value={service.title} required />
+                    {service.title}
+                  </label>
+                ))
+              }
+              <label class="option-card" data-option-card
+                ><input type="radio" name="finishPreference" value="Not sure yet" required />Not sure yet</label
+              >
             </div>
           </div>
 
-          <div class="wizard-step" data-step="2">
-            <h2>How large is the project?</h2>
-            <p>Approximate square footage helps PRVN prepare a more accurate estimate.</p>
+          <div class="wizard-step" data-step="2" hidden inert>
+            <h2>How large is the project?</h2><p>
+              Approximate square footage helps PRVN prepare a more accurate estimate.
+            </p>
             <div class="form-grid">
               <div class="form-field">
-                <label for="squareFeet">Approximate square feet</label>
-                <input
+                <label for="squareFeet">Approximate square feet</label><input
                   id="squareFeet"
                   name="squareFeet"
                   inputmode="numeric"
@@ -125,29 +132,31 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             </div>
           </div>
 
-          <div class="wizard-step" data-step="3">
-            <h2>What is the current surface?</h2>
-            <p>Select the condition that best describes the concrete.</p>
+          <div class="wizard-step" data-step="3" hidden inert>
+            <h2>What is the current surface?</h2><p>Select the condition that best describes the concrete.</p>
             <div class="option-grid">
-              {['Bare concrete', 'Painted or previously coated', 'Cracks or repairs needed', 'Oil, stains, or moisture concerns', 'Not sure'].map((option) => (
-                <label class="option-card" data-option-card>
-                  <input type="radio" name="surfaceCondition" value={option} />
-                  {option}
-                </label>
-              ))}
+              {
+                [
+                  'Bare concrete',
+                  'Painted or previously coated',
+                  'Cracks or repairs needed',
+                  'Oil, stains, or moisture concerns',
+                  'Not sure',
+                ].map((option) => (
+                  <label class="option-card" data-option-card>
+                    <input type="radio" name="surfaceCondition" value={option} />
+                    {option}
+                  </label>
+                ))
+              }
             </div>
           </div>
 
-          <div class="wizard-step" data-step="4">
-            <h2>Where is the project?</h2>
-            <p>PRVN covers the Florida Keys to West Palm Beach.</p>
+          <div class="wizard-step" data-step="4" hidden inert>
+            <h2>Where is the project?</h2><p>PRVN covers the Florida Keys to West Palm Beach.</p>
             <div class="form-grid">
               <div class="form-field">
-                <label for="location">
-                  Project location
-                  <span>Required</span>
-                </label>
-                <input
+                <label for="location">Project location <span>Required</span></label><input
                   id="location"
                   name="location"
                   autocomplete="street-address"
@@ -158,100 +167,87 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             </div>
           </div>
 
-          <div class="wizard-step" data-step="5">
-            <h2>What is the preferred timeline?</h2>
-            <p>Select when you would like the project to begin.</p>
+          <div class="wizard-step" data-step="5" hidden inert>
+            <h2>What is the preferred timeline?</h2><p>Select when you would like the project to begin.</p>
             <div class="option-grid">
-              {['As soon as possible', 'Within 2 weeks', 'This month', 'Planning ahead'].map((option) => (
-                <label class="option-card" data-option-card>
-                  <input type="radio" name="timeline" value={option} />
-                  {option}
-                </label>
-              ))}
+              {
+                ['As soon as possible', 'Within 2 weeks', 'This month', 'Planning ahead'].map((option) => (
+                  <label class="option-card" data-option-card>
+                    <input type="radio" name="timeline" value={option} />
+                    {option}
+                  </label>
+                ))
+              }
             </div>
           </div>
 
-          <div class="wizard-step" data-step="6">
-            <h2>Contact information</h2>
-            <p>PRVN will follow up by phone, text, or email.</p>
+          <div class="wizard-step" data-step="6" hidden inert>
+            <h2>Contact information</h2><p>PRVN will follow up by phone, text, or email.</p>
             <div class="form-grid">
               <div class="form-field">
-                <label for="name">
-                  Name
-                  <span>Required</span>
-                </label>
-                <input id="name" name="name" autocomplete="name" required />
+                <label for="name">Name <span>Required</span></label><input
+                  id="name"
+                  name="name"
+                  autocomplete="name"
+                  required
+                />
               </div>
               <div class="form-field">
-                <label for="phone">
-                  Phone
-                  <span>Required</span>
-                </label>
-                <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required />
+                <label for="phone">Phone <span>Required</span></label><input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  inputmode="tel"
+                  autocomplete="tel"
+                  required
+                />
               </div>
               <div class="form-field">
-                <label for="email">
-                  Email
-                  <span>Required</span>
-                </label>
-                <input id="email" name="email" type="email" autocomplete="email" required />
+                <label for="email">Email <span>Required</span></label><input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                />
               </div>
             </div>
           </div>
 
-          <div class="wizard-step" data-step="7">
-            <h2>Review and submit</h2>
-            <p>Confirm your project details before sending the request.</p>
+          <div class="wizard-step" data-step="7" hidden inert>
+            <h2>Review and submit</h2><p>Confirm your project details before sending the request.</p>
             <dl class="wizard-review" data-review-list>
-              <div class="review-item">
-                <dt>Space type</dt>
-                <dd data-review="projectType">-</dd>
-              </div>
-              <div class="review-item">
-                <dt>Finish preference</dt>
-                <dd data-review="finishPreference">-</dd>
-              </div>
-              <div class="review-item">
-                <dt>Square feet</dt>
-                <dd data-review="squareFeet">Not provided</dd>
-              </div>
-              <div class="review-item">
-                <dt>Surface condition</dt>
-                <dd data-review="surfaceCondition">Not provided</dd>
-              </div>
-              <div class="review-item">
-                <dt>Location</dt>
-                <dd data-review="location">-</dd>
-              </div>
-              <div class="review-item">
-                <dt>Timeline</dt>
-                <dd data-review="timeline">Not provided</dd>
-              </div>
-              <div class="review-item">
-                <dt>Name</dt>
-                <dd data-review="name">-</dd>
-              </div>
-              <div class="review-item">
-                <dt>Phone</dt>
-                <dd data-review="phone">-</dd>
-              </div>
-              <div class="review-item">
-                <dt>Email</dt>
-                <dd data-review="email">-</dd>
-              </div>
+              {
+                [
+                  ['Space type', 'projectType'],
+                  ['Finish preference', 'finishPreference'],
+                  ['Finish style', 'finishStyle'],
+                  ['Square feet', 'squareFeet'],
+                  ['Surface condition', 'surfaceCondition'],
+                  ['Location', 'location'],
+                  ['Timeline', 'timeline'],
+                  ['Name', 'name'],
+                  ['Phone', 'phone'],
+                  ['Email', 'email'],
+                ].map(([label, field]) => (
+                  <div class="review-item">
+                    <>
+                      <dt>{label}</dt>
+                      <dd data-review={field}>Not provided</dd>
+                    </>
+                  </div>
+                ))
+              }
             </dl>
             <div class="form-grid">
               <div class="form-field">
-                <label for="message">Additional project notes</label>
-                <textarea
+                <label for="message">Additional project notes</label><textarea
                   id="message"
                   name="message"
-                  placeholder="Tell PRVN about use, color ideas, coatings, cracks, and any photo links."
-                ></textarea>
+                  placeholder="Tell PRVN about use, color ideas, coatings, cracks, and any photo links."></textarea>
               </div>
               <div class="form-field">
-                <label for="photoLinks">Photo links</label>
-                <input
+                <label for="photoLinks">Photo links</label><input
                   id="photoLinks"
                   name="photoLinks"
                   placeholder="Google Drive, iCloud, Dropbox, or photo URLs"
@@ -268,18 +264,17 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           </div>
           <p class="form-status" data-form-status aria-live="polite"></p>
           <div class="quote-success" data-quote-success hidden tabindex="-1">
-            <span class="kicker">Request received</span>
-            <h2>PRVN will follow up using your contact details.</h2>
-            <p>If you need faster help, call or text {business.phoneDisplay}.</p>
-          </div>
-
-          <noscript>
-            <p class="form-status is-error">
-              JavaScript is required for this wizard. Please call{' '}
-              <a href={business.phoneHref}>{business.phoneDisplay}</a> or email{' '}
-              <a href={business.emailHref}>{business.email}</a>.
+            <span class="kicker">Request received</span><h2>PRVN will follow up using your contact details.</h2><p>
+              If you need faster help, call or text {business.phoneDisplay}.
             </p>
-          </noscript>
+          </div>
+          <noscript
+            ><p class="form-status is-error">
+              JavaScript is required for this wizard. Please call <a href={business.phoneHref}
+                >{business.phoneDisplay}</a
+              > or email <a href={business.emailHref}>{business.email}</a>.
+            </p></noscript
+          >
         </form>
       </div>
     </div>
@@ -287,235 +282,3 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 </Layout>
 
 {turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
-
-<script>
-  const form = document.querySelector('[data-quote-form]');
-
-  if (form instanceof HTMLFormElement) {
-    const steps = Array.from(form.querySelectorAll<HTMLElement>('[data-step]'));
-    const dots = Array.from(form.querySelectorAll('[data-step-dot]'));
-    const prev = form.querySelector('[data-prev]');
-    const next = form.querySelector('[data-next]');
-    const submit = form.querySelector('[data-submit]');
-    const status = form.querySelector('[data-form-status]');
-    const stepStatus = form.querySelector('[data-step-status]');
-    const reviewList = form.querySelector('[data-review-list]');
-    const success = form.querySelector('[data-quote-success]');
-    const stepLabels = ['Space type', 'Finish', 'Size', 'Surface', 'Location', 'Timeline', 'Contact', 'Review'];
-    const totalSteps = steps.length;
-    let step = 0;
-
-    const params = new URLSearchParams(window.location.search);
-    const urlSpace = params.get('space');
-    const urlFinish = params.get('finish');
-    const urlStyle = params.get('style');
-
-    if (urlFinish) {
-      const finishMap: Record<string, string> = {
-        flake: 'Flake',
-        quartz: 'Quartz',
-        metallic: 'Metallic',
-      };
-      const mappedFinish = finishMap[urlFinish];
-      if (mappedFinish) {
-        const radio = form.querySelector<HTMLInputElement>(
-          `input[name="finishPreference"][value*="${mappedFinish}"]`
-        );
-        if (radio) {
-          radio.checked = true;
-          radio.closest('[data-option-card]')?.classList.add('is-selected');
-        }
-      }
-    }
-
-    try {
-      const saved = localStorage.getItem('prvn-finish-pref');
-      if (saved && !urlFinish) {
-        const parsed = JSON.parse(saved);
-        if (parsed.finish) {
-          const finishMap: Record<string, string> = {
-            flake: 'Flake',
-            quartz: 'Quartz',
-            metallic: 'Metallic',
-          };
-          const mappedFinish = finishMap[parsed.finish];
-          if (mappedFinish) {
-            const radio = form.querySelector<HTMLInputElement>(
-              `input[name="finishPreference"][value*="${mappedFinish}"]`
-            );
-            if (radio) {
-              radio.checked = true;
-              radio.closest('[data-option-card]')?.classList.add('is-selected');
-            }
-          }
-        }
-      }
-    } catch {}
-
-    form.querySelectorAll<HTMLInputElement>('[data-option-card] input').forEach((input) => {
-      input.addEventListener('change', () => {
-        const group = input.name;
-        form.querySelectorAll<HTMLInputElement>(`input[name="${group}"]`).forEach((radio) => {
-          radio.closest('[data-option-card]')?.classList.toggle('is-selected', radio === input);
-        });
-      });
-    });
-
-    const setStatus = (message: string, isError = false) => {
-      if (!status) return;
-      status.textContent = message;
-      status.classList.toggle('is-error', isError);
-      status.classList.toggle('is-success', Boolean(message) && !isError);
-    };
-
-    const showStep = (focusTarget = false) => {
-      steps.forEach((item, index) => {
-        const active = index === step;
-        item.classList.toggle('is-active', active);
-        item.hidden = !active;
-        item.toggleAttribute('inert', !active);
-      });
-      dots.forEach((item, index) => {
-        item.classList.toggle('is-active', index === step);
-        item.classList.toggle('is-complete', index < step);
-      });
-      if (prev instanceof HTMLButtonElement) prev.hidden = step === 0;
-      if (next instanceof HTMLButtonElement) next.hidden = step === totalSteps - 1;
-      if (submit instanceof HTMLButtonElement) submit.hidden = step !== totalSteps - 1;
-      if (stepStatus) stepStatus.textContent = `Step ${step + 1} of ${totalSteps}: ${stepLabels[step]}`;
-      setStatus('');
-
-      if (step === totalSteps - 1) {
-        populateReview();
-      }
-
-      if (focusTarget) {
-        const heading = steps[step].querySelector<HTMLElement>('h2');
-        heading?.focus({ preventScroll: true });
-      }
-    };
-
-    const populateReview = () => {
-      if (!reviewList) return;
-      const data = new FormData(form);
-      reviewList.querySelectorAll<HTMLElement>('[data-review]').forEach((element) => {
-        const field = element.dataset.review || '';
-        const value = data.get(field);
-        element.textContent = value ? String(value) : 'Not provided';
-      });
-    };
-
-    const currentStepValid = () => {
-      const current = steps[step];
-      const requiredInputs = current.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
-        'input[required], select[required], textarea[required]'
-      );
-      for (const field of Array.from(requiredInputs)) {
-        if (!field.reportValidity()) {
-          field.focus();
-          return false;
-        }
-      }
-
-      const radioGroups = new Set<string>();
-      current.querySelectorAll<HTMLInputElement>('input[type="radio"][required]').forEach((radio) => {
-        radioGroups.add(radio.name);
-      });
-      for (const group of radioGroups) {
-        const checked = current.querySelector(`input[name="${group}"]:checked`);
-        if (!checked) {
-          const first = current.querySelector<HTMLInputElement>(`input[name="${group}"]`);
-          first?.closest('[data-option-card]')?.classList.add('is-invalid');
-          first?.focus();
-          return false;
-        }
-      }
-
-      return true;
-    };
-
-    next?.addEventListener('click', () => {
-      if (!currentStepValid()) return;
-      step = Math.min(step + 1, totalSteps - 1);
-      showStep(true);
-    });
-
-    prev?.addEventListener('click', () => {
-      step = Math.max(step - 1, 0);
-      showStep(true);
-    });
-
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      if (step < totalSteps - 1) {
-        if (!currentStepValid()) return;
-        step = Math.min(step + 1, totalSteps - 1);
-        showStep(true);
-        return;
-      }
-
-      const contactStep = steps[6];
-      const contactFields = contactStep.querySelectorAll<HTMLInputElement>(
-        'input[required]'
-      );
-      for (const field of Array.from(contactFields)) {
-        if (!field.reportValidity()) {
-          step = 6;
-          showStep(true);
-          field.focus();
-          return;
-        }
-      }
-
-      setStatus('Sending your request...');
-      if (submit instanceof HTMLButtonElement) {
-        submit.disabled = true;
-        submit.textContent = 'Sending...';
-      }
-
-      const formData = new FormData(form);
-      const payload: Record<string, string> = {};
-      formData.forEach((value, key) => {
-        payload[key] = String(value);
-      });
-
-      try {
-        const response = await fetch('/api/quote', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok || !result.ok) {
-          throw new Error(result.message || 'The request could not be sent right now. Please call or text PRVN.');
-        }
-        form.reset();
-        form.querySelectorAll('[data-option-card]').forEach((card) => card.classList.remove('is-selected'));
-        step = 0;
-        showStep(false);
-        if (success instanceof HTMLElement) {
-          success.hidden = false;
-          success.focus({ preventScroll: true });
-        }
-        setStatus('Request sent. PRVN will follow up using the contact details provided.');
-      } catch (error) {
-        setStatus(
-          error instanceof Error ? error.message : 'The request could not be sent right now. Please call or text PRVN.',
-          true
-        );
-      } finally {
-        if (submit instanceof HTMLButtonElement) {
-          submit.disabled = false;
-          submit.textContent = 'Send quote request';
-        }
-      }
-    });
-
-    steps.forEach((stepEl) => {
-      const heading = stepEl.querySelector<HTMLElement>('h2');
-      if (heading) heading.setAttribute('tabindex', '-1');
-    });
-
-    showStep();
-  }
-</script>

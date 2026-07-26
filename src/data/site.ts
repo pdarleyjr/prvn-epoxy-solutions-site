@@ -339,3 +339,64 @@ export const defaultRecommendation = {
   description: 'Select your space, finish, and style above to see a personalized recommendation.',
   uses: 'Garages, shops, utility areas',
 };
+
+export type ConfiguratorSelection = {
+  space: string;
+  finish: string;
+  style: string;
+};
+
+export type ConfiguratorRecommendation = {
+  system: string;
+  image: string;
+  description: string;
+  uses: string;
+};
+
+const configuratorSpaceDetails: Record<string, { label: string; uses: string }> = {
+  garage: { label: 'garage', uses: 'Daily parking, storage, workshop areas' },
+  patio: { label: 'covered patio', uses: 'Covered patios, lanais, entertaining areas' },
+  commercial: { label: 'commercial space', uses: 'Entries, retail floors, work areas' },
+  interior: { label: 'interior space', uses: 'Living areas, studios, utility rooms' },
+  countertop: { label: 'countertop project', uses: 'Kitchen counters, bar tops, vanities' },
+};
+
+const configuratorStyleDetails: Record<string, { label: string; direction: string }> = {
+  clean: { label: 'Clean', direction: 'a controlled, low-visual-noise palette' },
+  industrial: { label: 'Industrial', direction: 'a hardworking, traction-forward character' },
+  luxury: { label: 'Luxury', direction: 'a polished, high-impact finish direction' },
+  bold: { label: 'Bold', direction: 'high-contrast visual energy' },
+  'blue-accent': { label: 'Blue Accent', direction: 'cobalt detail within the finish palette' },
+  neutral: { label: 'Neutral', direction: 'a versatile silver, gray, and neutral palette' },
+};
+
+export const isConfiguratorSelection = (value: unknown): value is ConfiguratorSelection => {
+  if (!value || typeof value !== 'object') return false;
+  const selection = value as ConfiguratorSelection;
+  return (
+    configuratorSpaces.some((option) => option.id === selection.space) &&
+    configuratorFinishes.some((option) => option.id === selection.finish) &&
+    configuratorStyles.some((option) => option.id === selection.style)
+  );
+};
+
+export const getConfiguratorRecommendation = (selection: ConfiguratorSelection): ConfiguratorRecommendation => {
+  if (!isConfiguratorSelection(selection)) return defaultRecommendation;
+
+  const key = `${selection.space}-${selection.finish}-${selection.style}`;
+  const specificRecommendation = configuratorRecommendations[key];
+  if (specificRecommendation) return specificRecommendation;
+
+  const finish = finishFamilies.find((family) => family.id === selection.finish);
+  const space = configuratorSpaceDetails[selection.space];
+  const style = configuratorStyleDetails[selection.style];
+
+  if (!finish || !space || !style) return defaultRecommendation;
+
+  return {
+    system: finish.title,
+    image: finish.image,
+    description: `${finish.shortTitle} is paired with ${style.direction} for this ${space.label}. PRVN confirms concrete condition, preparation, and the final coating specification during the estimate.`,
+    uses: space.uses,
+  };
+};
