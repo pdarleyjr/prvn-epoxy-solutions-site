@@ -1,6 +1,6 @@
 site:
   name: PRVN Epoxy Solutions
-  site: 'https://prvn-epoxy-solutions-site.pages.dev'
+  site: 'https://www.prvnepoxy.com'
   base: '/'
   trailingSlash: false
 

@@ -1,4 +1,4 @@
-export const siteUrl = 'https://prvn-epoxy-solutions-site.pages.dev';
+export const siteUrl = 'https://www.prvnepoxy.com';
 
 export const business = {
   name: 'PRVN Epoxy Solutions',
