@@ -131,7 +131,7 @@ const setupMobileAppDeck = (): Cleanup | undefined => {
   const collectionCleanups = [
     ...Array.from(
       main.querySelectorAll<HTMLElement>(
-        '.finish-scroll, .gallery-grid, .gallery-grid-full, .metrics-grid, .timeline, .styles-grid, .cards-grid, .find-finish-selectors, [data-section="before-after"] .split-grid'
+        '.finish-scroll, .gallery-grid, .gallery-grid-full, .metrics-grid, .timeline, .styles-grid, .cards-grid, .find-finish-selectors, .wizard-review, [data-step="7"] .form-grid, [data-section="before-after"] .split-grid'
       )
     ).map((collection) => setupCollectionPager(collection, getSectionLabel(collection.closest('section')!, 0))),
     ...Array.from(main.querySelectorAll<HTMLElement>('.split-grid'))

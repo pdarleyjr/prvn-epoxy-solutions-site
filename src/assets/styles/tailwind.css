@@ -2720,7 +2720,65 @@ html.mobile-app-mode body {
 .mobile-app-mode .quote-wizard {
   max-height: 100%;
   overflow: hidden;
-  padding: 0.9rem;
+  gap: 0.45rem;
+  padding: 0.65rem;
+}
+
+.mobile-app-mode .quote-wizard .step-status {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+.mobile-app-mode .quote-wizard .wizard-progress {
+  gap: 0.3rem;
+  margin: 0 0 0.2rem;
+}
+
+.mobile-app-mode .quote-wizard .wizard-step.is-active {
+  gap: 0.4rem;
+}
+
+.mobile-app-mode .quote-wizard .wizard-step h2 {
+  font-size: 1.15rem;
+  line-height: 1.08;
+}
+
+.mobile-app-mode .quote-wizard .wizard-step p {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.mobile-app-mode .quote-wizard .option-grid,
+.mobile-app-mode .quote-wizard .form-grid,
+.mobile-app-mode .quote-wizard .wizard-review {
+  gap: 0.35rem;
+}
+
+.mobile-app-mode .quote-wizard .review-item {
+  gap: 0.15rem;
+  padding: 0.45rem 0.6rem;
+}
+
+.mobile-app-mode .quote-wizard textarea {
+  height: 64px;
+  min-height: 64px;
+  resize: none;
+}
+
+.mobile-app-mode .quote-wizard .mobile-app-collection-nav {
+  margin-top: 0.25rem;
+}
+
+.mobile-app-mode .quote-wizard .wizard-nav {
+  gap: 0.45rem;
+  margin-top: 0.25rem;
+  padding-top: 0.45rem;
+}
+
+.mobile-app-mode .quote-wizard .form-status:empty {
+  display: none;
 }
 
 .mobile-app-mode .quote-wizard .option-card {

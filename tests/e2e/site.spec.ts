@@ -1,6 +1,36 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const requiredWidths = [320, 390, 768, 1024, 1440];
+
+const expectActiveSectionFits = async (page: Page) => {
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const main = document.querySelector('main');
+        const section = document.querySelector<HTMLElement>('main > section:not([hidden])');
+        const deck = document.querySelector('[data-mobile-app-deck]');
+        if (!main || !section || !deck) return false;
+
+        const mainRect = main.getBoundingClientRect();
+        const deckRect = deck.getBoundingClientRect();
+        return Array.from(
+          section.querySelectorAll<HTMLElement>(
+            'h1, h2, h3, p, a, button, img, input, textarea, select, label, li, dt, dd'
+          )
+        )
+          .filter((element) => {
+            const rect = element.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0 && getComputedStyle(element).visibility !== 'hidden';
+          })
+          .every((element) => {
+            const rect = element.getBoundingClientRect();
+            return rect.top >= mainRect.top - 1 && rect.bottom <= deckRect.top - 4;
+          });
+      })
+    )
+    .toBe(true);
+  expect(await page.evaluate(() => document.scrollingElement?.scrollHeight === window.innerHeight)).toBe(true);
+};
 
 test('homepage keeps the essential experience inside every viewport', async ({ page }) => {
   const consoleErrors: string[] = [];
@@ -55,10 +85,13 @@ test('mobile drawer traps focus, closes with Escape, and survives client-side na
 });
 
 test('configurator fills all quote fields and the wizard preserves data on API failure', async ({ page }, testInfo) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+  testInfo.setTimeout(60_000);
+  await page.setViewportSize({ width: 390, height: 664 });
   await page.goto('/');
 
-  if (testInfo.project.name.startsWith('mobile')) {
+  const mobileApp = testInfo.project.name.startsWith('mobile');
+
+  if (mobileApp) {
     for (let sectionIndex = 0; sectionIndex < 6; sectionIndex += 1) {
       await page.getByRole('button', { name: 'Next section' }).click();
     }
@@ -66,21 +99,21 @@ test('configurator fills all quote fields and the wizard preserves data on API f
 
   await page.locator('[data-selector="space"][data-value="commercial"]').click();
 
-  if (testInfo.project.name.startsWith('mobile')) {
+  if (mobileApp) {
     const selectorPager = page.locator('.find-finish-selectors + .mobile-app-collection-nav');
     await selectorPager.getByRole('button', { name: 'Next item' }).click();
   }
 
   await page.locator('[data-selector="finish"][data-value="quartz"]').click();
 
-  if (testInfo.project.name.startsWith('mobile')) {
+  if (mobileApp) {
     const selectorPager = page.locator('.find-finish-selectors + .mobile-app-collection-nav');
     await selectorPager.getByRole('button', { name: 'Next item' }).click();
   }
 
   await page.locator('[data-selector="style"][data-value="industrial"]').click();
 
-  if (testInfo.project.name.startsWith('mobile')) {
+  if (mobileApp) {
     const selectorPager = page.locator('.find-finish-selectors + .mobile-app-collection-nav');
     await selectorPager.getByRole('button', { name: 'Next item' }).click();
   }
@@ -93,18 +126,37 @@ test('configurator fills all quote fields and the wizard preserves data on API f
   await expect(page.locator('input[name="finishPreference"][value="PRVN Quartz System"]')).toBeChecked();
   await expect(page.locator('[data-finish-style]')).toHaveValue('Industrial');
 
+  if (mobileApp) await expectActiveSectionFits(page);
   await page.getByRole('button', { name: 'Continue' }).click();
+  if (mobileApp) await expectActiveSectionFits(page);
   await page.getByRole('button', { name: 'Continue' }).click();
+  if (mobileApp) await expectActiveSectionFits(page);
   await page.getByRole('button', { name: 'Continue' }).click();
+  if (mobileApp) await expectActiveSectionFits(page);
   await page.getByRole('button', { name: 'Continue' }).click();
+  if (mobileApp) await expectActiveSectionFits(page);
   await page.getByLabel('Project location Required').fill('Miami, FL');
   await page.getByRole('button', { name: 'Continue' }).click();
+  if (mobileApp) await expectActiveSectionFits(page);
   await page.getByRole('button', { name: 'Continue' }).click();
+  if (mobileApp) await expectActiveSectionFits(page);
   await page.getByLabel('Name Required').fill('Avery Customer');
   await page.getByLabel('Phone Required').fill('954-555-0199');
   await page.getByLabel('Email Required').fill('avery@example.com');
   await page.getByRole('button', { name: 'Continue' }).click();
+  if (mobileApp) await expectActiveSectionFits(page);
   await expect(page.locator('[data-review="finishStyle"]')).toHaveText('Industrial');
+
+  if (mobileApp) {
+    const reviewPager = page.locator('.wizard-review + .mobile-app-collection-nav');
+    for (let reviewIndex = 1; reviewIndex < 10; reviewIndex += 1) {
+      await reviewPager.getByRole('button', { name: 'Next item' }).click();
+      await expectActiveSectionFits(page);
+    }
+    const notesPager = page.locator('[data-step="7"] .form-grid + .mobile-app-collection-nav');
+    await notesPager.getByRole('button', { name: 'Next item' }).click();
+    await expectActiveSectionFits(page);
+  }
 
   await page.route('**/api/quote', async (route) => {
     await route.fulfill({
