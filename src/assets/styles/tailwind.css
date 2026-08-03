@@ -178,9 +178,10 @@ main {
 
 .nav-toggle {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.42rem;
+  gap: 4px;
   min-width: 44px;
   min-height: 44px;
   border: 1px solid var(--line-strong);
@@ -203,10 +204,23 @@ main {
 
 .nav-toggle span {
   display: block;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
   background: var(--blue-2);
+  transition: transform 180ms var(--ease-prvn, ease);
+}
+
+.nav-toggle[aria-expanded='true'] span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded='true'] span:nth-child(2) {
+  transform: scaleX(0);
+}
+
+.nav-toggle[aria-expanded='true'] span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 .site-nav,
@@ -2258,4 +2272,462 @@ body::after {
   .wizard-sidebar {
     display: none;
   }
+}
+
+/* Phone-only application deck. JavaScript applies this class only to touch-first phone viewports. */
+html.mobile-app-mode,
+html.mobile-app-mode body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html.mobile-app-mode body {
+  min-height: 100dvh;
+}
+
+.mobile-app-mode .site-header {
+  position: relative;
+}
+
+.mobile-app-mode .nav-shell {
+  min-height: 60px;
+}
+
+.mobile-app-mode .brand-logo img {
+  width: clamp(116px, 35vw, 148px);
+}
+
+.mobile-app-mode .nav-toggle {
+  width: 52px;
+  min-width: 52px;
+  min-height: 44px;
+  justify-self: end;
+  border-radius: 16px;
+  padding: 0;
+}
+
+.mobile-app-mode main[data-mobile-app-main] {
+  position: relative;
+  height: calc(100dvh - var(--mobile-app-header-h, 68px) - var(--mobile-app-bottom-ui, 152px));
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.mobile-app-mode main[data-mobile-app-main] > section {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  padding: clamp(0.7rem, 2.5svh, 1.15rem) 0;
+}
+
+.mobile-app-mode main[data-mobile-app-main] > section[hidden] {
+  display: none;
+}
+
+.mobile-app-mode main[data-mobile-app-main] > section > .shell {
+  height: auto;
+  min-height: 0;
+}
+
+.mobile-app-mode .hero-grid.shell {
+  height: 100%;
+}
+
+.mobile-app-mode .hero,
+.mobile-app-mode .page-hero,
+.mobile-app-mode .section {
+  padding-block: clamp(0.7rem, 2.5svh, 1.15rem);
+}
+
+.mobile-app-mode .hero-grid,
+.mobile-app-mode .split-grid,
+.mobile-app-mode .hero-copy {
+  height: 100%;
+  min-height: 0;
+  gap: clamp(0.7rem, 1.7svh, 1rem);
+}
+
+.mobile-app-mode .hero-grid,
+.mobile-app-mode .split-grid {
+  align-content: center;
+}
+
+.mobile-app-mode .hero-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mobile-app-mode .hero-copy {
+  height: auto;
+  width: 100%;
+  margin: 0;
+}
+
+.mobile-app-mode .hero-copy,
+.mobile-app-mode .page-hero .section-heading {
+  align-content: center;
+}
+
+.mobile-app-mode .hero-media {
+  flex: 0 0 auto;
+  width: 100%;
+  max-height: min(24svh, 180px);
+  border-radius: 24px;
+}
+
+.mobile-app-mode .hero h1,
+.mobile-app-mode .section-heading h1,
+.mobile-app-mode .section-heading h2,
+.mobile-app-mode .big-heading,
+.mobile-app-mode .final-cta h2 {
+  font-size: clamp(1.85rem, 8.7vw, 3rem);
+  letter-spacing: -0.065em;
+  line-height: 0.94;
+}
+
+.mobile-app-mode .hero p,
+.mobile-app-mode .section-heading p,
+.mobile-app-mode .lede,
+.mobile-app-mode .card p,
+.mobile-app-mode .service-card p,
+.mobile-app-mode .metric-card p,
+.mobile-app-mode .contact-card p {
+  font-size: clamp(0.86rem, 3.7vw, 1rem);
+  line-height: 1.46;
+}
+
+.mobile-app-mode [data-mobile-app-compact] .section-heading,
+.mobile-app-mode [data-mobile-app-compact] .inline-actions,
+.mobile-app-mode [data-mobile-app-compact] .hero-actions {
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.mobile-app-mode [data-mobile-app-compact] .section-heading p {
+  display: none;
+}
+
+.mobile-app-mode .eyebrow,
+.mobile-app-mode .kicker {
+  font-size: 0.66rem;
+}
+
+.mobile-app-mode .hero-proof,
+.mobile-app-mode .site-footer {
+  display: none;
+}
+
+.mobile-app-mode .section-heading {
+  gap: 0.55rem;
+  margin-bottom: 0.8rem;
+}
+
+.mobile-app-mode .button,
+.mobile-app-mode .btn,
+.mobile-app-mode .btn-primary,
+.mobile-app-mode .btn-secondary {
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.88rem;
+}
+
+.mobile-app-mode .inline-actions,
+.mobile-app-mode .hero-actions {
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+
+.mobile-app-mode [data-mobile-app-collection] {
+  display: grid !important;
+  min-height: 0;
+  max-height: min(48svh, 350px);
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+.mobile-app-mode [data-mobile-app-collection] > [data-mobile-app-item-hidden] {
+  display: none !important;
+}
+
+.mobile-app-mode .finish-card,
+.mobile-app-mode .service-card,
+.mobile-app-mode .metric-card,
+.mobile-app-mode .card,
+.mobile-app-mode .contact-card,
+.mobile-app-mode .gallery-item,
+.mobile-app-mode .timeline article {
+  width: 100%;
+  min-height: 0;
+  max-width: none;
+  padding: 0.8rem;
+}
+
+.mobile-app-mode .finish-card img,
+.mobile-app-mode .service-card img,
+.mobile-app-mode .find-finish-result img {
+  height: min(17svh, 132px);
+  margin-bottom: 0.55rem;
+}
+
+.mobile-app-mode .gallery-item {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.mobile-app-mode .gallery-item img {
+  width: 100%;
+  height: min(35svh, 280px);
+  object-fit: contain;
+}
+
+.mobile-app-mode .finish-card h3,
+.mobile-app-mode .service-card h2,
+.mobile-app-mode .service-card h3,
+.mobile-app-mode .metric-card h3,
+.mobile-app-mode .card h2,
+.mobile-app-mode .card h3,
+.mobile-app-mode .contact-card h2 {
+  margin: 0.45rem 0;
+  font-size: 1.08rem;
+}
+
+.mobile-app-mode .finish-card p,
+.mobile-app-mode .service-card p,
+.mobile-app-mode .metric-card p,
+.mobile-app-mode .card p,
+.mobile-app-mode .contact-card p,
+.mobile-app-mode .timeline p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.42;
+}
+
+.mobile-app-mode .finish-card ul,
+.mobile-app-mode .service-card ul,
+.mobile-app-mode .check-list {
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+}
+
+.mobile-app-mode .finish-card-actions {
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+
+.mobile-app-mode [data-mobile-app-compact] .finish-scroll {
+  max-height: none;
+}
+
+.mobile-app-mode [data-mobile-app-compact].section-systems > .shell {
+  display: none;
+}
+
+.mobile-app-mode [data-mobile-app-compact] .finish-card {
+  padding: 0.65rem;
+}
+
+.mobile-app-mode [data-mobile-app-compact] .finish-card img {
+  height: min(10svh, 72px);
+  margin-bottom: 0.35rem;
+}
+
+.mobile-app-mode [data-mobile-app-compact] .finish-card p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.mobile-app-mode [data-mobile-app-compact] .finish-card ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mobile-app-mode [data-mobile-app-compact] .gallery-item img {
+  height: min(22svh, 146px);
+}
+
+.mobile-app-mode [data-mobile-app-compact] .gallery-preview-actions {
+  margin-top: 0.55rem;
+}
+
+.mobile-app-mode [data-mobile-app-compact] .find-finish-result p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.mobile-app-mode .timeline::before,
+.mobile-app-mode .timeline::after {
+  display: none;
+}
+
+.mobile-app-mode .timeline article {
+  padding-inline: 0.9rem;
+}
+
+.mobile-app-mode .timeline article h2,
+.mobile-app-mode .timeline article h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1.2rem;
+}
+
+.mobile-app-mode .mobile-app-collection-nav {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  width: min(100%, 260px);
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.65rem auto 0;
+}
+
+.mobile-app-mode .mobile-app-collection-nav button,
+.mobile-app-mode .mobile-app-deck button {
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ink);
+  font-size: 1.45rem;
+}
+
+.mobile-app-mode .mobile-app-collection-nav button:disabled,
+.mobile-app-mode .mobile-app-deck button:disabled {
+  opacity: 0.34;
+}
+
+.mobile-app-mode .mobile-app-collection-nav span,
+.mobile-app-mode .mobile-app-deck span {
+  overflow: hidden;
+  color: var(--steel);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mobile-app-deck {
+  position: fixed;
+  right: 0.9rem;
+  bottom: calc(env(safe-area-inset-bottom) + 4.5rem);
+  left: 0.9rem;
+  z-index: 61;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid rgba(95, 145, 255, 0.3);
+  border-radius: 18px;
+  background: rgba(5, 7, 10, 0.92);
+  padding: 0.2rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(16px);
+}
+
+.mobile-app-mode .conversion-dock {
+  bottom: max(0.35rem, env(safe-area-inset-bottom));
+  border-radius: 18px;
+  padding: 0.25rem;
+}
+
+.mobile-app-mode .conversion-dock a {
+  min-height: 48px;
+  gap: 0.15rem;
+}
+
+.mobile-app-mode .mobile-drawer-panel {
+  width: min(420px, 100vw);
+  overflow: hidden;
+  padding: calc(env(safe-area-inset-top) + 0.9rem) 1rem calc(env(safe-area-inset-bottom) + 1rem);
+}
+
+.mobile-app-mode .mobile-drawer-header {
+  margin-bottom: 1rem;
+}
+
+.mobile-app-mode .mobile-drawer-nav {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.mobile-app-mode .mobile-drawer-nav a {
+  min-height: 44px;
+  border-radius: 14px;
+  padding: 0.62rem 0.72rem;
+  font-size: 0.84rem;
+}
+
+.mobile-app-mode .mobile-drawer-actions {
+  display: none;
+}
+
+.mobile-app-mode .find-finish-grid {
+  gap: 0.55rem;
+}
+
+.mobile-app-mode .selector-group {
+  gap: 0.3rem;
+}
+
+.mobile-app-mode .selector-group h3 {
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+.mobile-app-mode .selector-options {
+  gap: 0.32rem;
+}
+
+.mobile-app-mode .selector-button {
+  min-height: 44px;
+  padding: 0.35rem 0.48rem;
+  font-size: 0.7rem;
+}
+
+.mobile-app-mode .find-finish-result {
+  padding: 0.65rem;
+}
+
+.mobile-app-mode .find-finish-selectors > .find-finish-result {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.mobile-app-mode .find-finish-result img {
+  display: none;
+}
+
+.mobile-app-mode .find-finish-result h3 {
+  font-size: 1rem;
+}
+
+.mobile-app-mode .find-finish-result p {
+  margin-bottom: 0.45rem;
+  font-size: 0.78rem;
+}
+
+.mobile-app-mode .quote-wizard {
+  max-height: 100%;
+  overflow: hidden;
+  padding: 0.9rem;
+}
+
+.mobile-app-mode .quote-wizard .option-card {
+  min-height: 42px;
+  padding: 0.58rem;
+}
+
+.mobile-app-mode .quote-wizard .option-card span {
+  font-size: 0.85rem;
 }

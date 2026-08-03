@@ -186,7 +186,6 @@ export const galleryFilters = [
   { id: 'quartz', label: 'Quartz' },
   { id: 'metallic', label: 'Metallic' },
   { id: 'solid', label: 'Solid' },
-  { id: 'carbon-fiber', label: 'Carbon Fiber' },
 ];
 
 export const galleryImages = [
@@ -199,16 +198,6 @@ export const galleryImages = [
     categories: ['flakes'],
     width: 941,
     height: 1672,
-  },
-  {
-    src: '/assets/gallery-project-02.webp',
-    full: '/assets/gallery-project-02.webp',
-    alt: 'Carbon fiber style epoxy floor finish in a garage',
-    caption: 'Carbon Fiber epoxy finish with a dark, high-contrast garage look.',
-    badge: 'Carbon Fiber',
-    categories: ['carbon-fiber'],
-    width: 1400,
-    height: 1050,
   },
   {
     src: '/assets/gallery-project-03.webp',

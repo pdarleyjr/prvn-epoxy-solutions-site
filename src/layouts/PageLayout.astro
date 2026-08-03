@@ -83,6 +83,11 @@ const { metadata } = Astro.props;
             </a>
           ))
         }
+        <a href="/service-areas" class:list={[Astro.url.pathname === '/service-areas' ? 'is-active' : '']}
+          >Service area</a
+        >
+        <a href="/privacy" class:list={[Astro.url.pathname === '/privacy' ? 'is-active' : '']}>Privacy</a>
+        <a href="/terms" class:list={[Astro.url.pathname === '/terms' ? 'is-active' : '']}>Terms</a>
       </nav>
       <div class="mobile-drawer-actions">
         <a class="button" href="/quote" data-cta="quote">Start a Quote</a>

@@ -29,6 +29,7 @@ test('mobile drawer traps focus, closes with Escape, and survives client-side na
   await page.goto('/');
   const menu = page.locator('[data-nav-toggle]');
   await menu.click();
+  await expect(page.locator('.mobile-drawer-panel')).toBeInViewport();
   await expect(menu).toHaveAttribute('aria-expanded', 'true');
   await expect(menu).toHaveAttribute('aria-label', 'Close navigation');
   await expect(page.locator('[data-mobile-drawer]')).toHaveAttribute('aria-hidden', 'false');
@@ -38,6 +39,7 @@ test('mobile drawer traps focus, closes with Escape, and survives client-side na
   await expect(menu).toHaveAttribute('aria-expanded', 'false');
 
   await menu.click();
+  await expect(page.locator('.mobile-drawer-panel')).toBeInViewport();
   await page.getByRole('link', { name: 'Gallery' }).last().click();
   await expect(page).toHaveURL(/\/gallery$/);
   await page.locator('[data-gallery-item]').first().click();
@@ -52,12 +54,37 @@ test('mobile drawer traps focus, closes with Escape, and survives client-side na
   await expect(page.locator('[data-mobile-drawer]')).toHaveAttribute('aria-hidden', 'false');
 });
 
-test('configurator fills all quote fields and the wizard preserves data on API failure', async ({ page }) => {
+test('configurator fills all quote fields and the wizard preserves data on API failure', async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
+
+  if (testInfo.project.name.startsWith('mobile')) {
+    for (let sectionIndex = 0; sectionIndex < 6; sectionIndex += 1) {
+      await page.getByRole('button', { name: 'Next section' }).click();
+    }
+  }
+
   await page.locator('[data-selector="space"][data-value="commercial"]').click();
+
+  if (testInfo.project.name.startsWith('mobile')) {
+    const selectorPager = page.locator('.find-finish-selectors + .mobile-app-collection-nav');
+    await selectorPager.getByRole('button', { name: 'Next item' }).click();
+  }
+
   await page.locator('[data-selector="finish"][data-value="quartz"]').click();
+
+  if (testInfo.project.name.startsWith('mobile')) {
+    const selectorPager = page.locator('.find-finish-selectors + .mobile-app-collection-nav');
+    await selectorPager.getByRole('button', { name: 'Next item' }).click();
+  }
+
   await page.locator('[data-selector="style"][data-value="industrial"]').click();
+
+  if (testInfo.project.name.startsWith('mobile')) {
+    const selectorPager = page.locator('.find-finish-selectors + .mobile-app-collection-nav');
+    await selectorPager.getByRole('button', { name: 'Next item' }).click();
+  }
+
   const quoteLink = page.locator('[data-result-quote]');
   await expect(quoteLink).toHaveAttribute('href', /space=commercial.*finish=quartz.*style=industrial/);
   await quoteLink.click();
@@ -98,4 +125,64 @@ test('reduced motion still exposes the homepage controls', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('link', { name: 'Get a free quote' })).toBeVisible();
   await expect(page.locator('[data-before-after] input[type="range"]')).toBeEnabled();
+});
+
+test('phone browsers use an accessible no-scroll app deck with the approved gallery set', async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name === 'desktop-chromium',
+    'The app deck is intentionally reserved for touch-first phones.'
+  );
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  await expect(page.locator('html')).toHaveClass(/mobile-app-mode/);
+  await expect(page.locator('[data-mobile-app-deck]')).toBeVisible();
+  expect(await page.evaluate(() => document.scrollingElement?.scrollHeight === window.innerHeight)).toBe(true);
+
+  const progress = page.locator('[data-mobile-app-deck-progress]');
+  await expect(progress).toContainText('1 of 8');
+
+  for (let sectionIndex = 0; sectionIndex < 8; sectionIndex += 1) {
+    expect(
+      await page.evaluate(() => {
+        const main = document.querySelector('main');
+        const section = document.querySelector<HTMLElement>('main > section:not([hidden])');
+        const deck = document.querySelector('[data-mobile-app-deck]');
+        if (!main || !section || !deck) return false;
+
+        const mainRect = main.getBoundingClientRect();
+        const deckRect = deck.getBoundingClientRect();
+        const visibleContent = Array.from(
+          section.querySelectorAll<HTMLElement>('h1, h2, h3, p, a, button, img, input, li')
+        )
+          .filter((element) => {
+            const rect = element.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0 && getComputedStyle(element).visibility !== 'hidden';
+          })
+          .map((element) => element.getBoundingClientRect());
+
+        return visibleContent.every((rect) => rect.top >= mainRect.top - 1 && rect.bottom <= deckRect.top - 4);
+      })
+    ).toBe(true);
+    expect(await page.evaluate(() => document.scrollingElement?.scrollHeight === window.innerHeight)).toBe(true);
+
+    if (sectionIndex < 7) await page.getByRole('button', { name: 'Next section' }).click();
+  }
+
+  await expect(progress).toContainText('8 of 8');
+
+  await page.goto('/gallery');
+  await expect(page.locator('[data-gallery-item]')).toHaveCount(4);
+  await expect(page.locator('img[src*="gallery-project-02"]')).toHaveCount(0);
+});
+
+test('desktop retains the editorial scrolling site rather than adopting phone app mode', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+
+  await expect(page.locator('html')).not.toHaveClass(/mobile-app-mode/);
+  await expect(page.locator('[data-mobile-app-deck]')).toHaveCount(0);
+  expect(await page.evaluate(() => document.scrollingElement!.scrollHeight > window.innerHeight)).toBe(true);
 });
