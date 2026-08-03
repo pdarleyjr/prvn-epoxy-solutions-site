@@ -145,12 +145,9 @@ const setupMobileAppDeck = (): Cleanup | undefined => {
   const fragmentIndex = sections.findIndex(
     (section) => fragment && containsOrMatches(section, `#${CSS.escape(fragment)}`)
   );
+  const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
   const routeSelector =
-    window.location.pathname === '/quote'
-      ? '[data-section="quote-form"]'
-      : window.location.pathname === '/gallery'
-        ? '[data-gallery-item]'
-        : undefined;
+    pathname === '/quote' ? '[data-section="quote-form"]' : pathname === '/gallery' ? '[data-gallery-item]' : undefined;
   const routeIndex = routeSelector ? sections.findIndex((section) => containsOrMatches(section, routeSelector)) : -1;
   let index = fragmentIndex >= 0 ? fragmentIndex : Math.max(0, routeIndex);
   let touchStart: { x: number; y: number } | undefined;

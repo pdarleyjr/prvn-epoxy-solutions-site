@@ -175,7 +175,11 @@ test('phone browsers use an accessible no-scroll app deck with the approved gall
 
   await page.goto('/gallery');
   await expect(page.locator('[data-gallery-item]')).toHaveCount(4);
+  await expect(page.locator('[data-gallery-item]').first()).toBeVisible();
   await expect(page.locator('img[src*="gallery-project-02"]')).toHaveCount(0);
+
+  await page.goto('/quote');
+  await expect(page.locator('form')).toBeVisible();
 });
 
 test('desktop retains the editorial scrolling site rather than adopting phone app mode', async ({ page }) => {
