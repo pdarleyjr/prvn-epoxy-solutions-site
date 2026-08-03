@@ -25,7 +25,7 @@ test('homepage keeps the essential experience inside every viewport', async ({ p
 });
 
 test('mobile drawer traps focus, closes with Escape, and survives client-side navigation', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+  await page.setViewportSize({ width: 390, height: 664 });
   await page.goto('/');
   const menu = page.locator('[data-nav-toggle]');
   await menu.click();
@@ -134,7 +134,7 @@ test('phone browsers use an accessible no-scroll app deck with the approved gall
     testInfo.project.name === 'desktop-chromium',
     'The app deck is intentionally reserved for touch-first phones.'
   );
-  await page.setViewportSize({ width: 390, height: 844 });
+  await page.setViewportSize({ width: 390, height: 664 });
   await page.goto('/');
 
   await expect(page.locator('html')).toHaveClass(/mobile-app-mode/);
@@ -145,27 +145,29 @@ test('phone browsers use an accessible no-scroll app deck with the approved gall
   await expect(progress).toContainText('1 of 8');
 
   for (let sectionIndex = 0; sectionIndex < 8; sectionIndex += 1) {
-    expect(
-      await page.evaluate(() => {
-        const main = document.querySelector('main');
-        const section = document.querySelector<HTMLElement>('main > section:not([hidden])');
-        const deck = document.querySelector('[data-mobile-app-deck]');
-        if (!main || !section || !deck) return false;
+    await expect
+      .poll(async () =>
+        page.evaluate(() => {
+          const main = document.querySelector('main');
+          const section = document.querySelector<HTMLElement>('main > section:not([hidden])');
+          const deck = document.querySelector('[data-mobile-app-deck]');
+          if (!main || !section || !deck) return false;
 
-        const mainRect = main.getBoundingClientRect();
-        const deckRect = deck.getBoundingClientRect();
-        const visibleContent = Array.from(
-          section.querySelectorAll<HTMLElement>('h1, h2, h3, p, a, button, img, input, li')
-        )
-          .filter((element) => {
-            const rect = element.getBoundingClientRect();
-            return rect.width > 0 && rect.height > 0 && getComputedStyle(element).visibility !== 'hidden';
-          })
-          .map((element) => element.getBoundingClientRect());
+          const mainRect = main.getBoundingClientRect();
+          const deckRect = deck.getBoundingClientRect();
+          const visibleContent = Array.from(
+            section.querySelectorAll<HTMLElement>('h1, h2, h3, p, a, button, img, input, li')
+          )
+            .filter((element) => {
+              const rect = element.getBoundingClientRect();
+              return rect.width > 0 && rect.height > 0 && getComputedStyle(element).visibility !== 'hidden';
+            })
+            .map((element) => element.getBoundingClientRect());
 
-        return visibleContent.every((rect) => rect.top >= mainRect.top - 1 && rect.bottom <= deckRect.top - 4);
-      })
-    ).toBe(true);
+          return visibleContent.every((rect) => rect.top >= mainRect.top - 1 && rect.bottom <= deckRect.top - 4);
+        })
+      )
+      .toBe(true);
     expect(await page.evaluate(() => document.scrollingElement?.scrollHeight === window.innerHeight)).toBe(true);
 
     if (sectionIndex < 7) await page.getByRole('button', { name: 'Next section' }).click();

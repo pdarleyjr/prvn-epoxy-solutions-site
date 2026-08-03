@@ -151,6 +151,7 @@ const setupMobileAppDeck = (): Cleanup | undefined => {
   const routeIndex = routeSelector ? sections.findIndex((section) => containsOrMatches(section, routeSelector)) : -1;
   let index = fragmentIndex >= 0 ? fragmentIndex : Math.max(0, routeIndex);
   let touchStart: { x: number; y: number } | undefined;
+  let fitFrame: number | undefined;
 
   const syncLayout = () => {
     const headerHeight = header?.getBoundingClientRect().height ?? 0;
@@ -164,7 +165,17 @@ const setupMobileAppDeck = (): Cleanup | undefined => {
   const fitCurrentSection = () => {
     const current = sections[index];
     if (!current) return;
-    current.toggleAttribute('data-mobile-app-compact', current.scrollHeight > main.clientHeight + 1);
+    if (current.scrollHeight > main.clientHeight + 1) current.setAttribute('data-mobile-app-compact', '');
+  };
+
+  const scheduleFit = () => {
+    if (!root.classList.contains('mobile-app-mode')) return;
+    if (fitFrame !== undefined) window.cancelAnimationFrame(fitFrame);
+    fitFrame = window.requestAnimationFrame(() => {
+      fitFrame = undefined;
+      syncLayout();
+      fitCurrentSection();
+    });
   };
 
   const show = (nextIndex: number) => {
@@ -180,7 +191,7 @@ const setupMobileAppDeck = (): Cleanup | undefined => {
     if (previous) previous.disabled = index === 0;
     if (next) next.disabled = index === sections.length - 1;
     syncLayout();
-    window.requestAnimationFrame(fitCurrentSection);
+    scheduleFit();
   };
 
   const onPrevious = () => show(index - 1);
@@ -235,6 +246,8 @@ const setupMobileAppDeck = (): Cleanup | undefined => {
   window.addEventListener('resize', onResize, { passive: true });
   window.addEventListener('orientationchange', onResize);
   window.visualViewport?.addEventListener('resize', onResize, { passive: true });
+  main.addEventListener('load', scheduleFit, true);
+  void document.fonts.ready.then(scheduleFit);
   show(index);
 
   return () => {
@@ -246,6 +259,8 @@ const setupMobileAppDeck = (): Cleanup | undefined => {
     window.removeEventListener('resize', onResize);
     window.removeEventListener('orientationchange', onResize);
     window.visualViewport?.removeEventListener('resize', onResize);
+    main.removeEventListener('load', scheduleFit, true);
+    if (fitFrame !== undefined) window.cancelAnimationFrame(fitFrame);
     collectionCleanups.forEach((cleanup) => cleanup());
     if (findFinishResult && findFinishResultParent) {
       findFinishResultParent.insertBefore(findFinishResult, findFinishResultNextSibling ?? null);
