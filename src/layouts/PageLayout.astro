@@ -8,12 +8,13 @@ import type { MetaData } from '~/types';
 
 export interface Props {
   metadata?: MetaData;
+  chat?: boolean;
 }
 
-const { metadata } = Astro.props;
+const { metadata, chat = true } = Astro.props;
 ---
 
-<Layout metadata={metadata}>
+<Layout metadata={metadata} chat={chat}>
   <header class="site-header" data-site-header>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="nav-shell">

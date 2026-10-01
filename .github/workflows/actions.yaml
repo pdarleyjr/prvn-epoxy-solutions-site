@@ -27,6 +27,14 @@ jobs:
         run: npx playwright install --with-deps chromium webkit
       - name: Run browser smoke tests
         run: npm run test:e2e
+      - name: Verify chat is absent when disabled
+        env:
+          PLAYWRIGHT_CHAT_DISABLED: 'true'
+          PUBLIC_LEADCONNECTOR_ENABLED: 'false'
+          PUBLIC_LEADCONNECTOR_EMBED: ''
+          PUBLIC_LEADCONNECTOR_LOCATION_ID: ''
+          PUBLIC_LEADCONNECTOR_WIDGET_ID: ''
+        run: npm run test:e2e -- tests/e2e/leadconnector-disabled.spec.ts
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
@@ -57,13 +65,27 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Inspect production Pages chat configuration
+        run: node scripts/load-leadconnector-pages-config.mjs production
       - run: npm run build
       - name: Deploy to Cloudflare Pages
+        id: pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name prvn-epoxy-solutions-site --branch main
+      - name: Install browsers for deployed chat smoke tests
+        if: env.PUBLIC_LEADCONNECTOR_ENABLED == 'false'
+        run: npx playwright install --with-deps chromium webkit
+      - name: Verify deployed public and private routes have no chat when disabled
+        if: env.PUBLIC_LEADCONNECTOR_ENABLED == 'false'
+        env:
+          LIVE_SITE_URL: ${{ steps.pages.outputs.deployment-url }}
+          PLAYWRIGHT_CHAT_DISABLED: 'true'
+        run: |
+          test -n "$LIVE_SITE_URL" || { echo "Cloudflare did not return the deployed preview URL."; exit 1; }
+          npm run test:e2e -- tests/e2e/leadconnector-disabled.spec.ts
 
   preview:
     if: github.event_name == 'push' && github.ref != 'refs/heads/main'
@@ -87,10 +109,24 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Inspect preview Pages chat configuration
+        run: node scripts/load-leadconnector-pages-config.mjs preview
       - run: npm run build
       - name: Deploy preview to Cloudflare Pages
+        id: pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name prvn-epoxy-solutions-site --branch ${{ github.ref_name }}
+      - name: Install browsers for deployed chat smoke tests
+        if: env.PUBLIC_LEADCONNECTOR_ENABLED == 'false'
+        run: npx playwright install --with-deps chromium webkit
+      - name: Verify deployed public and private routes have no chat when disabled
+        if: env.PUBLIC_LEADCONNECTOR_ENABLED == 'false'
+        env:
+          LIVE_SITE_URL: ${{ steps.pages.outputs.deployment-url }}
+          PLAYWRIGHT_CHAT_DISABLED: 'true'
+        run: |
+          test -n "$LIVE_SITE_URL" || { echo "Cloudflare did not return the deployed preview URL."; exit 1; }
+          npm run test:e2e -- tests/e2e/leadconnector-disabled.spec.ts

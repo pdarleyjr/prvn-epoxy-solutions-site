@@ -1,0 +1,65 @@
+---
+import { isLeadConnectorPublicRoute, resolveLeadConnectorConfig } from '~/utils/leadconnector';
+
+interface Props {
+  allowed?: boolean;
+}
+
+const config = resolveLeadConnectorConfig(import.meta.env);
+const publicRoute = Astro.props.allowed !== false && isLeadConnectorPublicRoute(Astro.url.pathname);
+if (import.meta.env.DEV && publicRoute && config.warning) console.warn(config.warning);
+---
+
+{
+  publicRoute && config.enabled && (
+    <div
+      id="prvn-leadconnector-chat"
+      data-leadconnector-root
+      data-embed={config.embed}
+      data-widget-id={config.embed === 'gtm' ? config.widgetId : undefined}
+      transition:persist="prvn-leadconnector-chat"
+    >
+      {config.embed === 'legacy' ? (
+        <chat-widget location-id={config.locationId} />
+      ) : (
+        <div data-chat-widget data-widget-id={config.widgetId} data-location-id={config.locationId} />
+      )}
+    </div>
+  )
+}
+
+<script>
+  import '~/scripts/leadconnector';
+</script>
+
+<style is:global>
+  /* Our containing block positions the provider's fixed host content. No shadow DOM overrides. */
+  #prvn-leadconnector-chat {
+    position: fixed;
+    inset: 0 0 var(--prvn-chat-clearance, 0px);
+    z-index: 62;
+    transform: translateZ(0);
+    pointer-events: none;
+  }
+
+  #prvn-leadconnector-chat > chat-widget,
+  #prvn-leadconnector-chat > [data-chat-widget] {
+    pointer-events: auto;
+  }
+
+  #prvn-leadconnector-chat[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 1023px) {
+    #prvn-leadconnector-chat {
+      --prvn-chat-clearance: calc(112px + env(safe-area-inset-bottom));
+    }
+  }
+
+  @media print {
+    #prvn-leadconnector-chat {
+      display: none;
+    }
+  }
+</style>

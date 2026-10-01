@@ -33,6 +33,8 @@ CLOUDFLARE_ACCOUNT_ID=265122b6d6f29457b0ca950c55f3ac6e
 
 ## Environment variables
 
+HighLevel/LeadConnector public chat configuration, route isolation, tests, and activation requirements are documented in [docs/leadconnector-chat.md](docs/leadconnector-chat.md). Chat remains disabled until the exact PRVN Get Code snippet is configured and verified in preview.
+
 Required for live quote email delivery:
 
 ```text
