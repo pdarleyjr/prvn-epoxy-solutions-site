@@ -61,6 +61,8 @@ LIVE_SITE_URL=https://the-existing-project-preview.pages.dev npm run test:e2e --
 
 The enabled Playwright fixture uses explicitly local test identifiers and intercepts the provider request. Those environment values are confined to the local test web server; deploy jobs rebuild from actual Pages configuration. Chromium, mobile Chrome emulation, and mobile Safari/WebKit emulation run these tests. Physical iPhone/Android/Samsung acceptance requires the real widget and devices.
 
+The Windows WebKit port also showed renderer/actionability failures with the fallback enabled. Complete native WebKit coverage is therefore provided by Linux CI; a local Windows run must not be reported as a full pass. Deployment acceptance uses the actual disabled Cloudflare build, with no provider mocks or fixture identifiers.
+
 The shared test fixture disables `Document.prototype.startViewTransition` only in Playwright WebKit on Windows, where native view transitions crash the browser before Astro's document swap. These local Windows WebKit runs exercise Astro's documented transition fallback with the full navigation and persistence assertions. Linux CI WebKit uses native view transitions without this override; Chromium also remains native on both platforms. This is a test-emulator workaround, not a production behavior change, and does not establish physical Safari acceptance.
 
 ## References
