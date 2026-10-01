@@ -24,6 +24,7 @@ Local Astro builds read these variables from the environment or `.env`. GitHub's
 - The component emits one async official loader inside the wrapper in the initial HTML, allowing ClientRouter to record it before navigation. `src/scripts/leadconnector.ts` detects existing loader/initialization, tracks `LC_chatWidgetLoaded`, and delegates `data-open-prvn-chat` clicks. Missing or throwing provider APIs fail silently. Custom triggers are implemented but unused to avoid adding another CTA.
 - Public/private route boundaries force a full document navigation. Removing a script or hiding a launcher cannot unload code that already executed; a new document keeps it out of authenticated pages.
 - Phone app navigation retains its existing reload behavior when chat is disabled. With a configured widget it uses ClientRouter across public pages so the wrapper can persist.
+- Chat-enabled phone navigation skips native page-transition snapshots while retaining ClientRouter's document swap and persistent widget. This avoids the fixed-overlay snapshot crash observed in Windows WebKit. The adapter handles the native animation's rejected `ready` promise when a transition is skipped; document-swap and script errors remain visible.
 
 Astro warns that persistent DOM does not guarantee iframe continuity. HighLevel cleans up resources when its custom element disconnects. The browser contract tests verify wrapper identity and single-loader behavior with a local test double; real conversation continuity must also be verified using PRVN's actual widget.
 

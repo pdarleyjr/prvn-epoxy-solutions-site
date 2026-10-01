@@ -1,5 +1,5 @@
 import { isLeadConnectorPublicRoute } from '~/utils/leadconnector';
-import type { TransitionBeforePreparationEvent } from 'astro:transitions/client';
+import type { TransitionBeforePreparationEvent, TransitionBeforeSwapEvent } from 'astro:transitions/client';
 
 interface ChatWidgetApi {
   openWidget?: () => void;
@@ -99,6 +99,17 @@ function initializeIntegration() {
   });
   window.addEventListener('LC_chatWidgetLoaded', setReady);
   document.addEventListener('astro:page-load', reconcile);
+  document.addEventListener('astro:before-swap', (event) => {
+    if (!document.querySelector('[data-leadconnector-root]')) return;
+    const swap = event as TransitionBeforeSwapEvent;
+    // Skipped native animations reject `ready`; the document swap still succeeds.
+    // Handle that non-critical animation promise without hiding swap or script errors.
+    void swap.viewTransition.ready.catch(() => {});
+    if (document.documentElement.classList.contains('mobile-app-mode')) {
+      // A direct ClientRouter swap avoids WebKit snapshot crashes with fixed phone UI.
+      swap.viewTransition.skipTransition();
+    }
+  });
   document.addEventListener('astro:before-preparation', (event) => {
     const preparation = event as TransitionBeforePreparationEvent;
     const destination = preparation.to;
