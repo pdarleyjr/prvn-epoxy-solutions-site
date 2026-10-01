@@ -63,6 +63,8 @@ The enabled Playwright fixture uses explicitly local test identifiers and interc
 
 The Windows WebKit port also showed renderer/actionability failures with the fallback enabled. Complete native WebKit coverage is therefore provided by Linux CI; a local Windows run must not be reported as a full pass. Deployment acceptance uses the actual disabled Cloudflare build, with no provider mocks or fixture identifiers.
 
+The workflow's optional `live_deployment_url` dispatch input runs read-only Linux browser acceptance without Cloudflare credentials. It accepts only immutable deployments of this existing PRVN project and requires their `/version.json` commit to match the selected Git ref. These disabled-site tests verify provider absence, layout, and conversion-control actionability; they do not establish real HighLevel delivery or authenticated portal acceptance.
+
 The shared test fixture disables `Document.prototype.startViewTransition` only in Playwright WebKit on Windows, where native view transitions crash the browser before Astro's document swap. These local Windows WebKit runs exercise Astro's documented transition fallback with the full navigation and persistence assertions. Linux CI WebKit uses native view transitions without this override; Chromium also remains native on both platforms. This is a test-emulator workaround, not a production behavior change, and does not establish physical Safari acceptance.
 
 ## References

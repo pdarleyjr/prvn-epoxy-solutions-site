@@ -8,9 +8,15 @@ on:
     branches:
       - '**'
   workflow_dispatch:
+    inputs:
+      live_deployment_url:
+        description: 'Existing PRVN immutable deployment URL to verify without deployment credentials'
+        required: false
+        type: string
 
 jobs:
   check:
+    if: github.event_name != 'workflow_dispatch' || inputs.live_deployment_url == ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +50,48 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
+          path: playwright-report/
+          if-no-files-found: ignore
+
+  verify-live:
+    if: github.event_name == 'workflow_dispatch' && inputs.live_deployment_url != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      LIVE_SITE_URL: ${{ inputs.live_deployment_url }}
+      PLAYWRIGHT_CHAT_DISABLED: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Require the exact PRVN deployment and source commit
+        run: |
+          node --input-type=module <<'NODE'
+          const url = new URL(process.env.LIVE_SITE_URL);
+          if (url.protocol !== 'https:' || url.username || url.password || url.port || url.search || url.hash || url.pathname !== '/' ||
+              !/^[a-f0-9]{8}\.prvn-epoxy-solutions-site\.pages\.dev$/.test(url.hostname)) {
+            throw new Error('Only an immutable deployment URL for the existing PRVN Pages project is allowed.');
+          }
+          const response = await fetch(new URL('/version.json', url), { redirect: 'error' });
+          if (!response.ok || (await response.json()).commit !== process.env.GITHUB_SHA) {
+            throw new Error('The deployment does not match this exact source commit.');
+          }
+          console.log('Exact PRVN deployment and source commit verified.');
+          NODE
+      - run: npm ci
+      - name: Install browsers for live acceptance
+        run: npx playwright install --with-deps chromium webkit
+      - name: Verify the actual disabled Cloudflare deployment
+        run: npm run test:e2e -- tests/e2e/leadconnector-disabled.spec.ts
+      - name: Upload live Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-live-report
           path: playwright-report/
           if-no-files-found: ignore
 
