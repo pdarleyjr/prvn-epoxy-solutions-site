@@ -106,7 +106,7 @@ function initializeIntegration() {
     // Handle that non-critical animation promise without hiding swap or script errors.
     void swap.viewTransition.ready.catch(() => {});
     if (document.documentElement.classList.contains('mobile-app-mode')) {
-      // A direct ClientRouter swap avoids WebKit snapshot crashes with fixed phone UI.
+      // Keep phone route changes immediate while the live chat and fixed controls persist.
       swap.viewTransition.skipTransition();
     }
   });

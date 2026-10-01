@@ -1,4 +1,6 @@
-import { expect, test, type Page, type Route } from '@playwright/test';
+import type { Page, Route } from '@playwright/test';
+
+import { expect, test } from './fixtures';
 
 // These identifiers and the provider double are local test fixtures, never live widget configuration.
 const localWidgetId = 'local-test-widget-id';

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test.skip(process.env.PRVN_CHAT_TEST_ENABLED === 'true', 'Run with PLAYWRIGHT_CHAT_DISABLED=true or LIVE_SITE_URL.');
 

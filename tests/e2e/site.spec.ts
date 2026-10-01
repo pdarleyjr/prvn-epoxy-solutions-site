@@ -1,4 +1,6 @@
-import { expect, test, type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
+
+import { expect, test } from './fixtures';
 
 test.beforeEach(async ({ page }) => {
   if (process.env.PRVN_CHAT_TEST_ENABLED === 'true') {
