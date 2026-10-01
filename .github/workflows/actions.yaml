@@ -109,6 +109,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Inspect production public chat identifiers before preview acceptance
+        run: >-
+          node --input-type=module -e "import { loadPagesChatConfig } from './scripts/load-leadconnector-pages-config.mjs';
+          loadPagesChatConfig('production').then(config => console.log(JSON.stringify(config))).catch(error => { console.error(error.message); process.exitCode = 1; });"
       - name: Inspect preview Pages chat configuration
         run: node scripts/load-leadconnector-pages-config.mjs preview
       - run: npm run build

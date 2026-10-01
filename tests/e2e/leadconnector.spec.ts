@@ -149,6 +149,48 @@ test.describe('enabled local LeadConnector adapter', () => {
     expect(errors).toEqual([]);
   });
 
+  test('browser Back preserves the public widget, loader, and functional API', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await mockProvider(page);
+    await page.goto('/');
+    await expect(page.getByRole('button', { name: 'Open mock PRVN chat' })).toBeVisible();
+    await page.evaluate(() => {
+      window.__prvnChatTestRoot = document.querySelector('[data-leadconnector-root]')!;
+      window.__prvnChatTestDocument = document;
+    });
+    await page.getByRole('button', { name: 'Open mock PRVN chat' }).click();
+    await navigatePublic(page, '/services');
+    await navigatePublic(page, '/gallery');
+
+    for (const path of ['/services', '/']) {
+      await page.goBack();
+      await expect(page).toHaveURL(new RegExp(`${path}/?$`));
+      await expect(page.locator('main h1')).toHaveText(
+        path === '/' ? 'Gloss, grit, and concrete armor.' : 'Coating systems for the way your concrete gets used.'
+      );
+      await expect(page.locator('[data-leadconnector-root]')).toHaveCount(1);
+      await expect(page.locator('#prvn-leadconnector-loader')).toHaveCount(1);
+      await expect(page.locator('[data-leadconnector-root] chat-widget')).toHaveCount(1);
+      await expect(page.getByRole('dialog', { name: 'Mock PRVN chat' })).toBeVisible();
+      expect(
+        await page.evaluate(
+          () =>
+            window.__prvnChatTestRoot === document.querySelector('[data-leadconnector-root]') &&
+            window.__prvnChatTestDocument === document
+        )
+      ).toBe(true);
+      expect(await page.evaluate(() => window.__prvnChatTest?.loaderRuns)).toBe(1);
+    }
+
+    await page.getByRole('button', { name: 'Close mock PRVN chat' }).click();
+    await addChatTrigger(page);
+    await page.getByRole('button', { name: 'Test custom chat trigger' }).click();
+    await expect(page.getByRole('dialog', { name: 'Mock PRVN chat' })).toBeVisible();
+    expect(await page.evaluate(() => window.__prvnChatTest?.opens)).toBe(2);
+    expect(errors).toEqual([]);
+  });
+
   test('readiness and delegated triggers fail safely when the provider is unavailable or throws', async ({ page }) => {
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
@@ -226,6 +268,41 @@ test.describe('enabled local LeadConnector adapter', () => {
     await expect(page).toHaveURL(/\/$/);
     await expect(page.getByRole('button', { name: 'Open mock PRVN chat' })).toBeVisible();
     expect(await page.evaluate(() => window.__prvnChatTest?.loaderRuns)).toBe(1);
+  });
+
+  test('synthetic Astro history timing forces a document reload when the URL already names a private destination', async ({
+    page,
+  }) => {
+    await mockProvider(page);
+    await page.goto('/');
+    await expect(page.getByRole('button', { name: 'Open mock PRVN chat' })).toBeVisible();
+    await expect(page.locator('#prvn-leadconnector-loader')).toHaveCount(1);
+    expect(await page.evaluate(() => window.__prvnChatTest?.loaderRuns)).toBe(1);
+    // Reproduce popstate timing: the browser URL changes before Astro prepares its
+    // destination, while the live document still contains the public provider fixture.
+    await page.evaluate(() => {
+      window.__prvnChatTestDocument = document;
+      history.replaceState(history.state, '', '/admin/login');
+    });
+    const [response, canceled] = await Promise.all([
+      page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      page.evaluate(() => {
+        const event = new Event('astro:before-preparation', { cancelable: true });
+        Object.defineProperties(event, {
+          from: { value: new URL('/', window.location.origin) },
+          to: { value: new URL('/admin/login', window.location.origin) },
+        });
+        document.dispatchEvent(event);
+        return event.defaultPrevented;
+      }),
+    ]);
+    expect(canceled).toBe(true);
+    expect(response?.status()).toBe(404);
+    await expect(page).toHaveURL(/\/admin\/login\/?$/);
+    await expect(page.locator('[data-leadconnector-root], chat-widget, [data-chat-widget]')).toHaveCount(0);
+    await expect(page.locator('#prvn-leadconnector-loader')).toHaveCount(0);
+    expect(await page.evaluate(() => window.leadConnector)).toBeUndefined();
+    expect(await page.evaluate(() => window.__prvnChatTestDocument)).toBeUndefined();
   });
 
   test('launcher and opened panel fit above the conversion dock and app deck at required widths', async ({ page }) => {
