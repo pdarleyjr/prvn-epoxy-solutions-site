@@ -24,6 +24,14 @@ if (import.meta.env.DEV && publicRoute && config.warning) console.warn(config.wa
       ) : (
         <div data-chat-widget data-widget-id={config.widgetId} data-location-id={config.locationId} />
       )}
+      <script
+        is:inline
+        id="prvn-leadconnector-loader"
+        src="https://widgets.leadconnectorhq.com/loader.js"
+        data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
+        data-widget-id={config.embed === 'gtm' ? config.widgetId : undefined}
+        async
+      />
     </div>
   )
 }

@@ -21,7 +21,7 @@ Local Astro builds read these variables from the environment or `.env`. GitHub's
 
 - `src/components/integrations/LeadConnectorWidget.astro` owns the exact selected embed and a `transition:persist="prvn-leadconnector-chat"` wrapper near the end of the body.
 - `src/utils/leadconnector.ts` validates configuration and allows only PRVN customer routes, including service and service-area slugs. Unknown, admin, API, share, print, and diagnostic routes fail closed. Layouts also accept `chat={false}` for future private documents; use `data-astro-reload` on links crossing such custom boundaries.
-- `src/scripts/leadconnector.ts` adds one async official loader inside the wrapper, detects existing loader/initialization, tracks `LC_chatWidgetLoaded`, and delegates `data-open-prvn-chat` clicks. Missing or throwing provider APIs fail silently. Custom triggers are implemented but unused to avoid adding another CTA.
+- The component emits one async official loader inside the wrapper in the initial HTML, allowing ClientRouter to record it before navigation. `src/scripts/leadconnector.ts` detects existing loader/initialization, tracks `LC_chatWidgetLoaded`, and delegates `data-open-prvn-chat` clicks. Missing or throwing provider APIs fail silently. Custom triggers are implemented but unused to avoid adding another CTA.
 - Public/private route boundaries force a full document navigation. Removing a script or hiding a launcher cannot unload code that already executed; a new document keeps it out of authenticated pages.
 - Phone app navigation retains its existing reload behavior when chat is disabled. With a configured widget it uses ClientRouter across public pages so the wrapper can persist.
 

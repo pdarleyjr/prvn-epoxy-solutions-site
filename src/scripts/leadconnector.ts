@@ -14,7 +14,6 @@ declare global {
 }
 
 const loaderUrl = 'https://widgets.leadconnectorhq.com/loader.js';
-const resourcesUrl = 'https://widgets.leadconnectorhq.com/chat-widget/loader.js';
 
 /** A non-critical enhancement: blocked or throwing provider APIs never interrupt PRVN. */
 export function openPrvnChat(): boolean {
@@ -81,23 +80,17 @@ function initializeIntegration() {
     const initialized = Boolean(window.leadConnector?.chatWidget?.openWidget);
     if (initialized) setReady();
     const existingLoader = Array.from(document.scripts).find((script) => script.src === loaderUrl);
-    if (initialized || existingLoader || root.dataset.loaderStarted === 'true') return;
+    if (!existingLoader || root.dataset.loaderStarted === 'true') return;
     root.dataset.loaderStarted = 'true';
-    const script = document.createElement('script');
-    script.id = 'prvn-leadconnector-loader';
-    script.src = loaderUrl;
-    script.async = true;
-    script.dataset.resourcesUrl = resourcesUrl;
-    if (root.dataset.embed === 'gtm') script.dataset.widgetId = root.dataset.widgetId;
-    script.addEventListener(
+    existingLoader.addEventListener(
       'error',
       () => {
         root.dataset.ready = 'false';
       },
       { once: true }
     );
-    // The current official loader attaches its generated custom element to this parent.
-    root.append(script);
+    // The component emits the loader in HTML so Astro records it before transitions.
+    // Dynamically appended scripts can be replayed by ClientRouter on the first swap.
   };
 
   document.addEventListener('click', (event) => {

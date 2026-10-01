@@ -63,10 +63,13 @@ const navigatePublic = async (page: Page, path: string) => {
   } else {
     const headerLink = page.locator(`[data-site-nav] a[href="${path}"]`).first();
     const quoteLink = page.locator(`[data-site-header] .nav-actions a[href="${path}"]`).first();
+    const dockLink = page.locator(`[data-conversion-dock] a[href="${path}"]`).first();
     if (await headerLink.isVisible()) {
       await headerLink.click();
     } else if (await quoteLink.isVisible()) {
       await quoteLink.click();
+    } else if (await dockLink.isVisible()) {
+      await dockLink.click();
     } else {
       await page.locator('[data-nav-toggle]').click();
       await page.locator(`[data-mobile-drawer] a[href="${path}"]`).first().click();
