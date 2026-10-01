@@ -8,14 +8,16 @@ import CommonMeta from '~/components/common/CommonMeta.astro';
 import Favicons from '~/components/Favicons.astro';
 import CustomStyles from '~/components/CustomStyles.astro';
 import Metadata from '~/components/common/Metadata.astro';
+import LeadConnectorWidget from '~/components/integrations/LeadConnectorWidget.astro';
 
 import type { MetaData as MetaDataType } from '~/types';
 
 export interface Props {
   metadata?: MetaDataType;
+  chat?: boolean;
 }
 
-const { metadata = {} } = Astro.props;
+const { metadata = {}, chat = true } = Astro.props;
 const { language, textDirection } = I18N;
 ---
 
@@ -37,5 +39,6 @@ const { language, textDirection } = I18N;
       import '~/scripts/site-shell';
       import '~/scripts/quote-wizard';
     </script>
+    <LeadConnectorWidget allowed={chat} />
   </body>
 </html>
