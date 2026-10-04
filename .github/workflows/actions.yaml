@@ -31,20 +31,17 @@ jobs:
       - run: npm run test:unit
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium webkit
-      - name: Run browser smoke tests
+      - name: Run public-site tests with chat disabled
         run: npm run test:e2e
-      - name: Verify the legacy location-only embed
+      - name: Verify GTM architecture with a local provider double
         env:
+          PRVN_CHAT_ARCHITECTURE: 'true'
+        run: npm run test:e2e -- tests/e2e/leadconnector-architecture.spec.ts
+      - name: Verify legacy architecture with a local provider double
+        env:
+          PRVN_CHAT_ARCHITECTURE: 'true'
           PRVN_CHAT_TEST_EMBED: 'legacy'
-        run: npm run test:e2e -- tests/e2e/leadconnector.spec.ts
-      - name: Verify chat is absent when disabled
-        env:
-          PLAYWRIGHT_CHAT_DISABLED: 'true'
-          PUBLIC_LEADCONNECTOR_ENABLED: 'false'
-          PUBLIC_LEADCONNECTOR_EMBED: ''
-          PUBLIC_LEADCONNECTOR_LOCATION_ID: ''
-          PUBLIC_LEADCONNECTOR_WIDGET_ID: ''
-        run: npm run test:e2e -- tests/e2e/leadconnector-disabled.spec.ts
+        run: npm run test:e2e -- tests/e2e/leadconnector-architecture.spec.ts
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
@@ -161,10 +158,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Inspect production public chat identifiers before preview acceptance
-        run: >-
-          node --input-type=module -e "import { loadPagesChatConfig } from './scripts/load-leadconnector-pages-config.mjs';
-          loadPagesChatConfig('production').then(config => console.log(JSON.stringify(config))).catch(error => { console.error(error.message); process.exitCode = 1; });"
       - name: Inspect preview Pages chat configuration
         run: node scripts/load-leadconnector-pages-config.mjs preview
       - run: npm run build

@@ -1,11 +1,13 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const liveSiteUrl = process.env.LIVE_SITE_URL;
-const chatTestEnabled = !liveSiteUrl && process.env.PLAYWRIGHT_CHAT_DISABLED !== 'true';
+const chatTestEnabled =
+  !liveSiteUrl && process.env.PRVN_CHAT_ARCHITECTURE === 'true' && process.env.PLAYWRIGHT_CHAT_DISABLED !== 'true';
 process.env.PRVN_CHAT_TEST_ENABLED = String(chatTestEnabled);
 
 export default defineConfig({
   testDir: './tests/e2e',
+  testMatch: chatTestEnabled ? '**/leadconnector-architecture.spec.ts' : '**/*.spec.ts',
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : 2,

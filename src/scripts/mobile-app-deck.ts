@@ -102,7 +102,6 @@ const setupMobileAppDeck = (): Cleanup | undefined => {
   const nativeNavigationLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href]')).filter((link) => {
     const target = new URL(link.href, window.location.href);
     return (
-      !document.querySelector('[data-leadconnector-root]') &&
       link.dataset.astroReload === undefined &&
       (target.protocol === 'http:' || target.protocol === 'https:') &&
       target.origin === window.location.origin
