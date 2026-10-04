@@ -1,52 +1,53 @@
-# PRVN HighLevel chat integration
+# PRVN HighLevel installation preparation
 
-The integration is disabled until PRVN supplies the exact installation snippet and completes real-widget preview acceptance. No customer-facing placeholder, fake ID, CRM credential, or widget network request is shipped while disabled.
+Integration prepared but not activated. Exact HighLevel Get Code snippet is still required.
 
-## Configuration and activation
+## Actual provider configuration
 
-Copy **HighLevel → Sites → Chat Widget → PRVN Widget → Get Code**. Preserve that snippet's format. The environment keys are:
+As of October 4, 2026, no complete PRVN installation HTML has been supplied. The earlier pasted JavaScript is the generic loader program; it has attribute names but no PRVN location or widget values. Sticky versus Embedded/Inline placement, actual embed format, provider resources/attributes, load strategy, and consent settings are **unknown**. No real launcher, conversation, inbox delivery, or visitor response has been verified.
 
-| Key                                | Value                                                                                         |
-| ---------------------------------- | --------------------------------------------------------------------------------------------- |
-| `PUBLIC_LEADCONNECTOR_ENABLED`     | `false` until acceptance, then `true`                                                         |
-| `PUBLIC_LEADCONNECTOR_EMBED`       | `legacy` for `<chat-widget location-id>`; `gtm` for the supplied `data-chat-widget` container |
-| `PUBLIC_LEADCONNECTOR_LOCATION_ID` | Exact PRVN location ID from Get Code                                                          |
-| `PUBLIC_LEADCONNECTOR_WIDGET_ID`   | Exact widget ID for GTM format; unnecessary for legacy                                        |
+Obtain **HighLevel → Sites → Chat Widget → PRVN widget → Save → Get Code → Copy**, and confirm its **Style → Widget Placement** setting. Sticky is the intended floating site-wide experience. If the client configured Embedded/Inline, report that mismatch before changing presentation.
 
-Only client-visible installation identifiers belong in these keys. Never enter API keys, access tokens, or HighLevel credentials. Enabled with missing/invalid configuration renders nothing and warns only in development. Unsupported future snippet formats require review before activation.
+When the snippet arrives, save the original HTML verbatim in implementation notes. Record placement, location/widget IDs, resources URL, every provider attribute/style/load/consent option, and every deliberate Astro difference. Preserve the generated format and unknown attributes. The current component is only a scaffold for the two originally supplied standard formats; it is not a substitute for the client's exact code.
 
-Local Astro builds read these variables from the environment or `.env`. GitHub's direct-upload preview/production jobs read these four keys from the **existing** `prvn-epoxy-solutions-site` Pages project's corresponding preview/production configuration before building. The Pages Function does not dynamically configure a static Astro build. Changing Pages variables requires a new build/deployment. Unconfigured production stays disabled.
+## Minimal implementation
 
-## Implementation
+`src/layouts/Layout.astro` invokes `LeadConnectorWidget.astro` immediately before `</body>`, after PRVN's existing scripts. Its fragment emits the provider host and loader as direct body children. No content card, iframe, sized container, wrapper, custom CSS, transform, positioning, pointer-events changes, or clipping surround the provider. The external script has Astro's `is:inline` compiler directive; no custom loader ID, async flag, or simulated interaction-loading attribute is added.
 
-- `src/components/integrations/LeadConnectorWidget.astro` owns the exact selected embed and a `transition:persist="prvn-leadconnector-chat"` wrapper near the end of the body.
-- `src/utils/leadconnector.ts` validates configuration and allows only PRVN customer routes, including service and service-area slugs. Unknown, admin, API, share, print, and diagnostic routes fail closed. Layouts also accept `chat={false}` for future private documents; use `data-astro-reload` on links crossing such custom boundaries.
-- The component emits one async official loader inside the wrapper in the initial HTML, allowing ClientRouter to record it before navigation. `src/scripts/leadconnector.ts` detects existing loader/initialization, tracks `LC_chatWidgetLoaded`, and delegates `data-open-prvn-chat` clicks. Missing or throwing provider APIs fail silently. Custom triggers are implemented but unused to avoid adding another CTA.
-- Public/private route boundaries force a full document navigation. Removing a script or hiding a launcher cannot unload code that already executed; a new document keeps it out of authenticated pages.
-- Phone app navigation retains its existing reload behavior when chat is disabled. With a configured widget it uses ClientRouter across public pages so the wrapper can persist.
-- Chat-enabled phone navigation skips the native page-transition animation while retaining ClientRouter's document swap and persistent widget. The adapter handles the native animation's rejected `ready` promise when a transition is skipped; document-swap and script errors remain visible.
+The existing public-route allowlist and `chat={false}` layout opt-out remain. Missing/invalid configuration renders no provider markup. These client-visible build variables retain their existing meanings:
 
-Astro warns that persistent DOM does not guarantee iframe continuity. HighLevel cleans up resources when its custom element disconnects. The browser contract tests verify wrapper identity and single-loader behavior with a local test double; real conversation continuity must also be verified using PRVN's actual widget.
+| Variable                           | Meaning                                                           |
+| ---------------------------------- | ----------------------------------------------------------------- |
+| `PUBLIC_LEADCONNECTOR_ENABLED`     | Keep `false` until actual preview acceptance.                     |
+| `PUBLIC_LEADCONNECTOR_EMBED`       | Select `legacy` or `gtm` only after comparing the actual snippet. |
+| `PUBLIC_LEADCONNECTOR_LOCATION_ID` | Exact location identifier from the snippet.                       |
+| `PUBLIC_LEADCONNECTOR_WIDGET_ID`   | Exact widget identifier if supplied; not required for legacy.     |
 
-## Mobile collision handling
+Only public installation identifiers belong here. Never put CRM/API credentials in browser code. The Pages configuration reader selects only these four plaintext keys from the existing project's chosen environment. It retains secret/injection guards and sanitized errors; preview no longer makes an extra production-config read. Static builds require rebuilding after variable changes.
 
-PRVN's own fixed wrapper creates a containing block for the provider's fixed content. The adapter measures the visible conversion dock, phone section controls, and optional `[data-chat-clearance]` consent UI, reserving their occupied area plus 12px. CSS supplies an initial safe-area fallback and hides chat in print. ResizeObserver and viewport resize handling update the clearance. There are no generated-class selectors, shadow DOM overrides, invented provider attributes, or `!important` rules.
+`src/scripts/leadconnector.ts` contains a guarded `openPrvnChat()` and one delegated `data-open-prvn-chat` handler. No extra chat CTA is rendered. The small private-route boundary guard requests a full document navigation when provider code is installed and the destination is excluded. Future private links should use `data-astro-reload`; no vendor state is surgically hidden, closed, or unloaded. Existing admin paths are currently 404s, not an implemented portal.
 
-The local provider test double exercises fixed launcher placement at 320, 375, 390, 430, 768, and 1440px. **Real provider launcher, open panel, keyboard, toolbar, safe-area, and conversation behavior remain pending** the actual snippet. Review the real widget's dimensions/settings before enabling production.
+All speculative public-route persistence, readiness bookkeeping, loader initialization markers, ResizeObserver clearance, viewport handlers, and native transition manipulation were removed. PRVN's phone navigation is restored to its original behavior. Public SPA conversation continuity is **not established**. Do not activate this scaffold and assume it survives body swaps.
 
-## HighLevel owner settings and acceptance
+## Real-widget acceptance: pending
 
-Use **Sites → Chat Widget → PRVN widget → Customization/settings → Enable Load on User Interaction**. This is a HighLevel setting; no unsupported loader attribute simulates it. The documented strategy includes a fallback load after about eight seconds.
+1. Confirm the exact snippet and Sticky/Embedded setting. Configure/build/deploy preview with that snippet.
+2. Direct-load a public page. Verify launcher, open/close, fields/consent, no provider errors, and a real test conversation in the **correct PRVN Conversations inbox**. Have PRVN respond and confirm delivery to the visitor. Fix provider configuration first if direct loading fails.
+3. Navigate Home → Services → Gallery → Contact → Quote → Home, with chat open and closed, plus Back/Forward. Observe actual resets, duplicates, loader count, API behavior, and conversation state. Only then add the lightest persistence or idempotency fix needed. Do not infer continuity from a test double.
+4. Inspect 320×568, 375×667, 390×844, 430×932, and 768×1024, plus desktop. Verify keyboard, browser toolbars, safe areas, no overflow, and the Call/Text/Get Quote dock. If there is no collision, add no positioning changes. If there is one, use HighLevel placement/dimensions first, evaluate either corner, then consider PRVN's own dock before any supported host adjustment. Do not target undocumented Shadow DOM.
+5. Verify no provider markup/code on admin/private/API/share/print/diagnostic routes, including public/private full-document boundaries.
+6. Inspect actual provider network/CSP needs. Existing security headers remain unchanged; no CSP currently exists. Add no speculative or wildcard origins.
+7. Only after real preview acceptance, deploy production and repeat real inbox/response and mobile acceptance.
 
-Recommended settings: bottom-right Sticky placement, primary `#0B54FF`, darker blue `#0A3FBD`, dark surfaces `#05070A` / `#0C1118`, text `#F5F7FB`, and concise welcome copy: “Need a floor estimate? Tell us about your project.” Avoid large mobile prompt bubbles. No account settings have been changed without access to PRVN's widget.
+Recommended branding remains an owner setting: cobalt `#0B54FF`, surfaces `#05070A` / `#0C1118`, light text `#F5F7FB`, and “Need a floor estimate? Tell us about your project.” In HighLevel's **Chat Window → Additional Options**, consider **Load on user interaction**. The documented strategy uses scroll/click/touch with about an eight-second fallback. No Astro JavaScript recreates this setting.
 
-Review its contact fields, SMS consent, unchecked consent choices, privacy/terms links, acknowledgement, inactivity settings, and mobile/desktop dimensions against the existing quote form. Existing legal text is unchanged.
+### SMS consent review
 
-Before activation, run the actual widget on the Cloudflare preview; inspect its network/CSP behavior; open, close, send one clearly identified test chat, and confirm it in the **correct PRVN Conversations inbox**. Test Home → Services → Gallery → Quote → Home with chat open and closed, browser Back, excluded routes, mobile keyboard, and Call/Text/Quote controls. Never equate the local test double with successful inbox delivery.
+Current repository inspection found that the Quote wizard collects name, phone, and email and says PRVN will follow up by phone/text/email. It has no explicit SMS-consent checkbox or dedicated SMS-consent text. Contact offers call/text/email links and a Quote link; it has no separate signup form. The actual widget's fields/consent and the A2P-submitted page are unknown, so a competing-consent-form conflict cannot yet be determined. Review the actual widget and submitted page together; legal text was not changed and no compliance approval is claimed.
 
-No CSP currently exists in `public/_headers`; its existing security headers are preserved. No guessed provider origins or wildcard policy changes were added. Add a minimal allowlist only if actual PRVN widget traffic and an existing future policy require it.
+## Automated architecture checks
 
-## Verification commands
+Default `npm run test:e2e` uses chat disabled. The separate `leadconnector-architecture.spec.ts` suite uses an explicitly local provider double only when `PRVN_CHAT_ARCHITECTURE=true`; it checks direct body-end markup, exclusion, safe API/failure behavior, and private document isolation. It has no fake launcher geometry, containing-block assertions, or simulated conversation-continuity acceptance. No Windows native-transition override remains.
 
 ```sh
 npm ci
@@ -54,23 +55,29 @@ npm run check
 npm run test:unit
 npm run build
 npm run test:e2e
-PLAYWRIGHT_CHAT_DISABLED=true npm run test:e2e -- tests/e2e/leadconnector-disabled.spec.ts
-PRVN_CHAT_TEST_EMBED=legacy npm run test:e2e -- tests/e2e/leadconnector.spec.ts
-LIVE_SITE_URL=https://the-existing-project-preview.pages.dev npm run test:e2e -- tests/e2e/leadconnector-disabled.spec.ts
+PRVN_CHAT_ARCHITECTURE=true npm run test:e2e -- tests/e2e/leadconnector-architecture.spec.ts
+PRVN_CHAT_ARCHITECTURE=true PRVN_CHAT_TEST_EMBED=legacy npm run test:e2e -- tests/e2e/leadconnector-architecture.spec.ts
+# Set LIVE_SITE_URL to the immutable URL returned by the existing PRVN Pages project.
+npm run test:e2e -- tests/e2e/leadconnector-disabled.spec.ts
 ```
 
-The enabled Playwright fixture uses explicitly local test identifiers and intercepts the provider request. Those environment values are confined to the local test web server; deploy jobs rebuild from actual Pages configuration. Chromium, mobile Chrome emulation, and mobile Safari/WebKit emulation run these tests. Physical iPhone/Android/Samsung acceptance requires the real widget and devices.
+Fixture results prove architecture only. Live disabled-site checks prove provider absence and existing public controls, not real HighLevel layout, positioning, consent, routing, or inbox delivery.
 
-The Windows WebKit port also showed renderer/actionability failures with the fallback enabled. Complete native WebKit coverage is therefore provided by Linux CI; a local Windows run must not be reported as a full pass. Deployment acceptance uses the actual disabled Cloudflare build, with no provider mocks or fixture identifiers.
+## Cloudflare deployment credential
 
-The workflow's optional `live_deployment_url` dispatch input runs read-only Linux browser acceptance without Cloudflare credentials. It accepts only immutable deployments of this existing PRVN project and requires their `/version.json` commit to match the selected Git ref. These disabled-site tests verify provider absence, layout, and conversion-control actionability; they do not establish real HighLevel delivery or authenticated portal acceptance.
+The earlier GitHub token returned HTTP 401. Local Wrangler OAuth can deploy, but does not establish API-token management authority. Cloudflare documents **Account → Cloudflare Pages → Edit**, scoped to the existing account, as the minimum deployment permission. It permits Pages projects throughout that account; no documented Pages-project-only token scope was found. Do not claim an account-scoped token is restricted to PRVN alone.
 
-The shared test fixture disables `Document.prototype.startViewTransition` only in Playwright WebKit on Windows, where native view transitions crash the browser before Astro's document swap. These local Windows WebKit runs exercise Astro's documented transition fallback with the full navigation and persistence assertions. Linux CI WebKit uses native view transitions without this override; Chromium also remains native on both platforms. This is a test-emulator workaround, not a production behavior change, and does not establish physical Safari acceptance.
+The authenticated account inspection on October 4 found no PRVN-named user token or dedicated PRVN account token. The token behind GitHub's opaque secret could not be positively identified, so no existing token was rotated and no unrelated credential was changed. Automatic deployment still needs a securely updated credential.
 
-## References
+Rotate only the positively identified dedicated token through an authorized account session, review/narrow its existing permissions, and securely update this repository's secret. Token rotation preserves permissions and immediately invalidates the prior value. Do not copy short-lived Wrangler OAuth into GitHub or introduce broader API-token-management credentials to work around missing access.
 
-- [HighLevel installation](https://help.gohighlevel.com/support/solutions/articles/155000005067-getting-started-setup-live-chat-widget)
-- [HighLevel public APIs and readiness event](https://help.gohighlevel.com/support/solutions/articles/48001191051-web-chat-widget-advanced-configurations-public-api-events)
-- [HighLevel customization and loading settings](https://help.gohighlevel.com/support/solutions/articles/155000002960-overview-of-chat-widget-customizations)
-- [Astro persistence and lifecycle](https://docs.astro.build/en/guides/view-transitions/)
-- [Astro navigation events](https://docs.astro.build/en/reference/modules/astro-transitions/)
+## Primary references
+
+- [HighLevel setup and Get Code](https://help.gohighlevel.com/support/solutions/articles/155000005067-getting-started-setup-live-chat-widget)
+- [HighLevel Sticky/Embedded customization](https://help.gohighlevel.com/support/solutions/articles/155000002960)
+- [HighLevel load on interaction](https://help.gohighlevel.com/support/solutions/articles/155000004102-getting-started-with-chat-widget)
+- [Astro script processing](https://docs.astro.build/en/guides/client-side-scripts/)
+- [Astro ClientRouter lifecycle and persistence](https://docs.astro.build/en/guides/view-transitions/)
+- [Cloudflare Pages CI permissions](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/)
+- [Cloudflare token permission scopes](https://developers.cloudflare.com/fundamentals/api/reference/permissions/)
+- [Cloudflare token rotation](https://developers.cloudflare.com/fundamentals/api/how-to/roll-token/)

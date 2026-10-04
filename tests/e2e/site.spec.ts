@@ -1,15 +1,4 @@
-import type { Page } from '@playwright/test';
-
-import { expect, test } from './fixtures';
-
-test.beforeEach(async ({ page }) => {
-  if (process.env.PRVN_CHAT_TEST_ENABLED === 'true') {
-    // Fixture IDs stay local. Provider behavior is exercised in leadconnector.spec.ts.
-    await page.route('https://widgets.leadconnectorhq.com/loader.js', (route) =>
-      route.fulfill({ contentType: 'application/javascript', body: '/* local provider stub */' })
-    );
-  }
-});
+import { expect, test, type Page } from '@playwright/test';
 
 const requiredWidths = [320, 390, 768, 1024, 1440];
 
