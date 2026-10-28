@@ -6,10 +6,13 @@ import type { MetaData } from '~/types';
 export interface Props {
   frontmatter: {
     title?: string;
+    download?: string;
   };
+  headings: { depth: number; slug: string; text: string }[];
 }
 
 const { frontmatter } = Astro.props;
+const headings = Astro.props.headings.filter((heading) => heading.depth === 2);
 
 const metadata: MetaData = {
   title: frontmatter?.title,
@@ -20,6 +23,29 @@ const metadata: MetaData = {
   <section class="page-hero">
     <article class="shell card legal-copy">
       <h1>{frontmatter.title}</h1>
+      <nav aria-label="Legal documents" class="legal-links">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        {
+          frontmatter.download && (
+            <a href={frontmatter.download} download>
+              Download PDF
+            </a>
+          )
+        }
+      </nav>
+      <details class="legal-contents">
+        <summary>On this page</summary>
+        <ul>
+          {
+            headings.map((heading) => (
+              <li>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </details>
       <slot />
     </article>
   </section>

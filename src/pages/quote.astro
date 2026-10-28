@@ -253,6 +253,10 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
                   placeholder="Google Drive, iCloud, Dropbox, or photo URLs"
                 />
               </div>
+              <p class="form-note">
+                Read our <a href="/privacy" class="underline">Privacy Policy</a> and
+                <a href="/terms" class="underline">Terms of Service</a> before submitting your request.
+              </p>
               {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="dark" />}
             </div>
           </div>
