@@ -8,11 +8,11 @@ export interface Props {
     title?: string;
     download?: string;
   };
-  getHeadings: () => { depth: number; slug: string; text: string }[];
+  headings: { depth: number; slug: string; text: string }[];
 }
 
 const { frontmatter } = Astro.props;
-const headings = Astro.props.getHeadings().filter((heading) => heading.depth === 2);
+const headings = Astro.props.headings.filter((heading) => heading.depth === 2);
 
 const metadata: MetaData = {
   title: frontmatter?.title,
