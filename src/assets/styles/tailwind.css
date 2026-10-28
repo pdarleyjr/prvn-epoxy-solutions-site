@@ -907,6 +907,44 @@ main {
 
 .legal-copy {
   max-width: 860px;
+  overflow-wrap: anywhere;
+}
+
+.legal-copy h2 {
+  margin: 2.5rem 0 1rem;
+  font-size: clamp(1.35rem, 4vw, 1.8rem);
+  line-height: 1.3;
+  scroll-margin-top: 8rem;
+}
+
+.legal-copy p + p {
+  margin-top: 1rem;
+}
+
+.legal-copy ul {
+  padding-left: 1.5rem;
+  list-style: disc;
+  margin-block: 1rem;
+}
+
+.legal-copy a {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  margin-block: 1.5rem;
+}
+
+.legal-contents {
+  margin-block: 1.5rem;
+}
+
+.legal-contents summary {
+  cursor: pointer;
 }
 
 .legal-copy h1 {
